@@ -119,14 +119,31 @@ class AdminController extends Controller
         |--------------------------------------------------------------------------
         | Filter Status
         |--------------------------------------------------------------------------
+        |
+        | Nilai divalidasi ke daftar status yang ada, jadi ?status=
+        | kosong atau ?status=ngawur tidak membuat tombol filter
+        | kehilangan penanda aktif.
+        |
         */
-        if (
-            $request->filled('status') &&
-            $request->status !== 'semua'
-        ) {
+        $statusTersedia = [
+            'menunggu',
+            'disetujui',
+            'ditolak',
+            'dibatalkan',
+        ];
+
+        $statusAktif = in_array(
+            $request->query('status'),
+            $statusTersedia,
+            true
+        )
+            ? $request->query('status')
+            : 'semua';
+
+        if ($statusAktif !== 'semua') {
             $query->where(
                 'status',
-                $request->status
+                $statusAktif
             );
         }
 
@@ -147,7 +164,7 @@ class AdminController extends Controller
         return view('admin.history', [
             'pendaftarans' => $pendaftarans,
 
-            'statusAktif' => $request->status ?? 'semua',
+            'statusAktif' => $statusAktif,
         ]);
     }
 

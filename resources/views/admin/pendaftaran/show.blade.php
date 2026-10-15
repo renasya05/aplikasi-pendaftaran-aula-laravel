@@ -837,9 +837,16 @@
                     name="catatan_admin"
                     id="catatan_admin"
                     rows="5"
+                    maxlength="1000"
                     placeholder="Contoh: Jadwal penggunaan aula tidak tersedia pada tanggal yang diajukan."
                     required
-                ></textarea>
+                >{{ old('catatan_admin') }}</textarea>
+
+                @error('catatan_admin')
+                    <div class="alert alert-danger" style="margin-top:12px;">
+                        {{ $message }}
+                    </div>
+                @enderror
 
 
                 <div class="modal-actions">
@@ -867,6 +874,16 @@
         </div>
 
     </div>
+
+@if ($errors->has('catatan_admin'))
+    <script>
+        // Validasi gagal: modal penolakan langsung dibuka lagi
+        // supaya pesan error dan isi textarea kelihatan.
+        document.addEventListener('DOMContentLoaded', function () {
+            openRejectModal();
+        });
+    </script>
+@endif
 
 </div>
 
