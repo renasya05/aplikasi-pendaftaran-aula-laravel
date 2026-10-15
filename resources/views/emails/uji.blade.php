@@ -26,7 +26,7 @@
                                 Email ini dikirim ke: <strong>{{ $tujuan }}</strong>
                             </p>
                             <p style="margin:0; color:#94a3b8; font-size:12px; line-height:1.6;">
-                                Waktu kirim: {{ now('Asia/Jakarta')->format('d/m/Y H:i') }} WIB
+                                Waktu kirim: {{ now()->format('d/m/Y H:i') }} WITA
                             </p>
                         </td>
                     </tr>

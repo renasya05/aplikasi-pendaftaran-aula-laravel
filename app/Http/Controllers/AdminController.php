@@ -372,11 +372,12 @@ class AdminController extends Controller
         | (realtime). Contoh: jika sekarang bulan Oktober,
         | maka hanya Oktober yang ditampilkan.
         |
-        | Zona waktu dikunci ke Asia/Jakarta agar pergantian
-        | bulan mengikuti waktu setempat, bukan UTC.
+        | Memakai zona waktu aplikasi (WITA), sama dengan topbar dan
+        | dashboard user, jadi keduanya tidak bisa menampilkan bulan
+        | yang berbeda.
         |
         */
-        $sekarang = now('Asia/Jakarta');
+        $sekarang = now();
 
         $tahun = (int) $sekarang->format('Y');
 
