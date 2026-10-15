@@ -128,7 +128,7 @@ class PendaftaranController extends Controller
 
             'kriteria_waktu' => [
                 'required',
-                'in:pagi_siang,siang_sore,malam',
+                'in:pagi_siang,siang_sore,malam,gabungan_pagi_siang,gabungan_siang_malam,gabungan_pagi_malam',
             ],
 
             'jumlah_peserta' => [
@@ -297,6 +297,31 @@ class PendaftaranController extends Controller
         }
 
         /**
+         * Peta slot waktu untuk mendeteksi bentrok,
+         * termasuk opsi waktu gabungan.
+         */
+        $slotMap = [
+            'pagi_siang' => ['pagi'],
+            'siang_sore' => ['siang'],
+            'malam' => ['malam'],
+            'gabungan_pagi_siang' => ['pagi', 'siang'],
+            'gabungan_siang_malam' => ['siang', 'malam'],
+            'gabungan_pagi_malam' => ['pagi', 'malam'],
+        ];
+
+        $slotDiminta = $slotMap[
+            $validated['kriteria_waktu']
+        ] ?? [];
+
+        $kriteriaBentrok = [];
+
+        foreach ($slotMap as $kriteria => $slots) {
+            if (array_intersect($slotDiminta, $slots)) {
+                $kriteriaBentrok[] = $kriteria;
+            }
+        }
+
+        /**
          * Cek bentrok jadwal.
          *
          * Pendaftaran dengan status menunggu
@@ -330,9 +355,9 @@ class PendaftaranController extends Controller
                 '>=',
                 $validated['tanggal_mulai']
             )
-            ->where(
+            ->whereIn(
                 'kriteria_waktu',
-                $validated['kriteria_waktu']
+                $kriteriaBentrok
             )
             ->exists();
 
@@ -343,13 +368,22 @@ class PendaftaranController extends Controller
 
             $namaWaktu = [
                 'pagi_siang' =>
-                    'Pagi – Siang (08.00–13.00)',
+                    'Pagi (08.00–13.00)',
 
                 'siang_sore' =>
-                    'Siang – Sore (14.00–16.00)',
+                    'Siang (14.00–16.00)',
 
                 'malam' =>
                     'Malam (18.00–21.00)',
+
+                'gabungan_pagi_siang' =>
+                    'Pagi – Siang (08.00–16.00)',
+
+                'gabungan_siang_malam' =>
+                    'Siang – Malam (14.00–21.00)',
+
+                'gabungan_pagi_malam' =>
+                    'Pagi – Malam (08.00–21.00)',
             ];
 
             return back()
@@ -457,7 +491,7 @@ class PendaftaranController extends Controller
         /**
          * Ambil waktu yang sudah digunakan.
          */
-        $terpakai = Pendaftaran::query()
+        $kriteriaTerpakai = Pendaftaran::query()
             ->where(
                 'aula_id',
                 $validated['aula_id']
@@ -485,14 +519,6 @@ class PendaftaranController extends Controller
                 '>=',
                 $validated['tanggal_mulai']
             )
-            ->whereIn(
-                'kriteria_waktu',
-                [
-                    'pagi_siang',
-                    'siang_sore',
-                    'malam',
-                ]
-            )
             ->pluck(
                 'kriteria_waktu'
             )
@@ -500,8 +526,30 @@ class PendaftaranController extends Controller
             ->values()
             ->toArray();
 
+        /**
+         * Petakan ke slot waktu agar opsi gabungan
+         * ikut terdeteksi bentrok.
+         */
+        $slotMap = [
+            'pagi_siang' => ['pagi'],
+            'siang_sore' => ['siang'],
+            'malam' => ['malam'],
+            'gabungan_pagi_siang' => ['pagi', 'siang'],
+            'gabungan_siang_malam' => ['siang', 'malam'],
+            'gabungan_pagi_malam' => ['pagi', 'malam'],
+        ];
+
+        $slotTerpakai = [];
+
+        foreach ($kriteriaTerpakai as $kriteria) {
+            foreach ($slotMap[$kriteria] ?? [] as $slot) {
+                $slotTerpakai[$slot] = true;
+            }
+        }
+
         return response()->json([
-            'terpakai' => $terpakai,
+            'terpakai' => $kriteriaTerpakai,
+            'slotTerpakai' => array_keys($slotTerpakai),
         ]);
     }
 
@@ -556,5 +604,44 @@ class PendaftaranController extends Controller
                 'pendaftaran'
             )
         );
+    }
+
+
+    /**
+     * Batalkan pengajuan milik user sendiri
+     * selama status masih Menunggu.
+     */
+    public function cancel(Pendaftaran $pendaftaran)
+    {
+        if (
+            $pendaftaran->user_id
+            !==
+            Auth::id()
+        ) {
+            abort(403);
+        }
+
+
+        if ($pendaftaran->status !== 'menunggu') {
+            return redirect()
+                ->route('pendaftaran.show', $pendaftaran)
+                ->with(
+                    'error',
+                    'Pengajuan hanya dapat dibatalkan selama status Menunggu.'
+                );
+        }
+
+
+        $pendaftaran->update([
+            'status' => 'dibatalkan',
+        ]);
+
+
+        return redirect()
+            ->route('pendaftaran.history')
+            ->with(
+                'success',
+                'Pengajuan berhasil dibatalkan.'
+            );
     }
 }

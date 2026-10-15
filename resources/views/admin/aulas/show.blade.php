@@ -375,7 +375,7 @@
 
     <div class="logo">
         <h1>SAPA</h1>
-        <p>Sistem Aplikasi Pemakaian Aula</p>
+        <p>Sistem Aplikasi untuk Layanan Akomodasi (Aula)</p>
     </div>
 
     <nav class="menu">

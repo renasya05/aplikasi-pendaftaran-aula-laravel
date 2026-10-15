@@ -320,9 +320,12 @@
 
             @php
                 $labelWaktu = [
-                    'pagi_siang' => 'Pagi - Siang',
-                    'siang_sore' => 'Siang - Sore',
-                    'malam' => 'Malam',
+                    'pagi_siang' => 'Pagi (08.00 - 13.00)',
+                    'siang_sore' => 'Siang (14.00 - 16.00)',
+                    'malam' => 'Malam (18.00 - 21.00)',
+                    'gabungan_pagi_siang' => 'Pagi - Siang (08.00 - 16.00)',
+                    'gabungan_siang_malam' => 'Siang - Malam (14.00 - 21.00)',
+                    'gabungan_pagi_malam' => 'Pagi - Malam (08.00 - 21.00)',
                 ][$item->kriteria_waktu] ?? $item->kriteria_waktu;
             @endphp
 

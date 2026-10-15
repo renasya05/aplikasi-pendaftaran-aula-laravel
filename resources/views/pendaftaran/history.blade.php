@@ -6,6 +6,9 @@
 
 <div class="history-page">
 
+    {{-- Navbar kanan atas: hari, notifikasi, profil --}}
+    @include('partials.topbar')
+
     {{-- =========================================================
          HEADER
     ========================================================== --}}
@@ -202,363 +205,163 @@
 
         @if($pendaftarans->count() > 0)
 
-            <div class="table-wrapper">
+            @php
+                $labelWaktu = [
+                    'pagi_siang' => '08.00 - 13.00',
+                    'siang_sore' => '15.00 - 16.00',
+                    'malam' => '18.00 - 21.00',
+                    'gabungan_pagi_siang' => '08.00 - 16.00',
+                    'gabungan_siang_malam' => '14.00 - 21.00',
+                    'gabungan_pagi_malam' => '08.00 - 21.00',
+                ];
+            @endphp
 
-                <table class="history-table">
+            {{-- PENCARIAN & FILTER --}}
 
-                    <thead>
+            <div class="riwayat-toolbar">
 
-                        <tr>
+                <div class="riwayat-search">
+                    <span class="riwayat-search-icon">🔍</span>
+                    <input
+                        type="text"
+                        id="riwayatSearch"
+                        placeholder="Cari nama kegiatan..."
+                        autocomplete="off"
+                    >
+                </div>
 
-                            <th class="number-column">
-                                No
-                            </th>
+                <select id="riwayatFilter" class="riwayat-select">
+                    <option value="all">Semua</option>
+                    <option value="menunggu">Menunggu</option>
+                    <option value="disetujui">Disetujui</option>
+                    <option value="ditolak">Ditolak</option>
+                    <option value="dibatalkan">Dibatalkan</option>
+                </select>
 
-                            <th>
-                                Aula
-                            </th>
-
-                            <th>
-                                Tanggal
-                            </th>
-
-                            <th>
-                                Waktu
-                            </th>
-
-                            <th>
-                                Unit Organisasi
-                            </th>
-
-                            <th>
-                                Peserta
-                            </th>
-
-                            <th>
-                                Pihak Luar
-                            </th>
-
-                            <th>
-                                Keperluan
-                            </th>
-
-                            <th>
-                                Status
-                            </th>
-
-                            <th>
-                                Aksi
-                            </th>
-
-                        </tr>
-
-                    </thead>
+            </div>
 
 
-                    <tbody>
+            {{-- DAFTAR RIWAYAT --}}
 
-                        @foreach($pendaftarans as $index => $pendaftaran)
+            <div class="riwayat-list" id="riwayatList">
 
-                            <tr>
+                @foreach($pendaftarans as $pendaftaran)
 
-                                {{-- NO --}}
+                    @php
+                        $namaAula = $pendaftaran->aula->nama_aula ?? '-';
 
-                                <td class="number-column">
+                        $fotoAula = str_contains(strtolower($namaAula), 'kecil')
+                            ? asset('images/aula-kecil.jpg')
+                            : asset('images/aula-besar.jpg');
 
-                                    <span class="number-badge">
-                                        {{ $index + 1 }}
-                                    </span>
+                        $namaKegiatan = $pendaftaran->keperluan ?: 'Pemakaian Aula';
 
-                                </td>
+                        $statusRiwayat = in_array(
+                            $pendaftaran->status,
+                            ['disetujui', 'ditolak', 'dibatalkan']
+                        ) ? $pendaftaran->status : 'menunggu';
+                    @endphp
 
+                    <a
+                        href="{{ route('pendaftaran.show', $pendaftaran) }}"
+                        class="riwayat-item"
+                        data-nama="{{ strtolower($namaKegiatan) }}"
+                        data-status="{{ $statusRiwayat }}"
+                    >
 
-                                {{-- AULA --}}
+                        <img
+                            src="{{ $fotoAula }}"
+                            alt="{{ $namaAula }}"
+                            class="riwayat-thumb"
+                        >
 
-                                <td>
+                        <div class="riwayat-info">
 
-                                    <div class="aula-cell">
+                            <div class="riwayat-title">
+                                {{ $namaKegiatan }}
+                            </div>
 
-                                        <div class="aula-icon">
-                                            🏢
-                                        </div>
+                            <div class="riwayat-meta">
 
-                                        <div>
+                                @if($pendaftaran->tanggal_mulai)
 
-                                            <div class="aula-name">
-                                                {{ $pendaftaran->aula->nama_aula ?? '-' }}
-                                            </div>
-
-                                            <div class="aula-caption">
-                                                Aula SAPA
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </td>
-
-
-                                {{-- TANGGAL --}}
-
-                                <td>
-
-                                    <div class="date-wrapper">
-
-                                        @if($pendaftaran->tanggal_mulai)
-
-                                            <span class="day-name">
-
-                                                {{
-                                                    \Carbon\Carbon::parse(
-                                                        $pendaftaran->tanggal_mulai
-                                                    )
-                                                    ->locale('id')
-                                                    ->translatedFormat('l')
-                                                }}
-
-                                            </span>
-
-                                            <strong>
-
-                                                {{
-                                                    \Carbon\Carbon::parse(
-                                                        $pendaftaran->tanggal_mulai
-                                                    )
-                                                    ->locale('id')
-                                                    ->translatedFormat('d F Y')
-                                                }}
-
-                                            </strong>
-
-
-                                            @if(
-                                                $pendaftaran->tanggal_selesai &&
-                                                $pendaftaran->tanggal_selesai !=
-                                                $pendaftaran->tanggal_mulai
-                                            )
-
-                                                <span class="date-to">
-                                                    sampai
-                                                </span>
-
-                                                <strong>
-
-                                                    {{
-                                                        \Carbon\Carbon::parse(
-                                                            $pendaftaran->tanggal_selesai
-                                                        )
-                                                        ->locale('id')
-                                                        ->translatedFormat('d F Y')
-                                                    }}
-
-                                                </strong>
-
-                                            @endif
-
-                                        @else
-
-                                            <span class="empty-value">
-                                                -
-                                            </span>
-
-                                        @endif
-
-                                    </div>
-
-                                </td>
-
-
-                                {{-- WAKTU --}}
-
-                                <td>
+                                    {{
+                                        \Carbon\Carbon::parse($pendaftaran->tanggal_mulai)
+                                            ->locale('id')
+                                            ->translatedFormat('d M Y')
+                                    }}
 
                                     @if(
-                                        $pendaftaran->jam_mulai &&
-                                        $pendaftaran->jam_selesai
+                                        $pendaftaran->tanggal_selesai &&
+                                        $pendaftaran->tanggal_selesai != $pendaftaran->tanggal_mulai
                                     )
-
-                                        <div class="time-box">
-
-                                            <span class="time-icon">
-                                                🕐
-                                            </span>
-
-                                            <span class="time-text">
-
-                                                {{
-                                                    \Carbon\Carbon::parse(
-                                                        $pendaftaran->jam_mulai
-                                                    )->format('H:i')
-                                                }}
-
-                                                -
-
-                                                {{
-                                                    \Carbon\Carbon::parse(
-                                                        $pendaftaran->jam_selesai
-                                                    )->format('H:i')
-                                                }}
-
-                                            </span>
-
-                                        </div>
-
-                                    @else
-
-                                        <span class="empty-value">
-                                            -
-                                        </span>
-
+                                        -
+                                        {{
+                                            \Carbon\Carbon::parse($pendaftaran->tanggal_selesai)
+                                                ->locale('id')
+                                                ->translatedFormat('d M Y')
+                                        }}
                                     @endif
 
-                                </td>
+                                    •
 
-
-                                {{-- UNIT ORGANISASI --}}
-
-                                <td>
-
-                                    <div class="organization-text">
-
-                                        @if($pendaftaran->unit_organisasi)
-
-                                            <div class="organization-main">
-                                                {{ $pendaftaran->unit_organisasi }}
-                                            </div>
-
-                                            @if($pendaftaran->bagian_seksi)
-
-                                                <div class="organization-sub">
-                                                    {{ $pendaftaran->bagian_seksi }}
-                                                </div>
-
-                                            @endif
-
-                                        @else
-
-                                            <div class="organization-main">
-                                                {{ $pendaftaran->instansi ?? 'Eksternal' }}
-                                            </div>
-
-                                            <div class="organization-sub external">
-                                                Pemohon Eksternal
-                                            </div>
-
-                                        @endif
-
-                                    </div>
-
-                                </td>
-
-
-                                {{-- PESERTA --}}
-
-                                <td>
-
-                                    <div class="participant">
-
-                                        <strong>
-                                            {{ $pendaftaran->jumlah_peserta ?? 0 }}
-                                        </strong>
-
-                                        <span>
-                                            orang
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-
-                                {{-- PIHAK LUAR --}}
-
-                                <td>
-
-                                    @if($pendaftaran->peserta_pihak_luar === 'ada')
-
-                                        <span class="badge badge-warning">
-                                            Ada
-                                        </span>
-
+                                    @if($pendaftaran->jam_mulai && $pendaftaran->jam_selesai)
+                                        {{ \Carbon\Carbon::parse($pendaftaran->jam_mulai)->format('H.i') }}
+                                        -
+                                        {{ \Carbon\Carbon::parse($pendaftaran->jam_selesai)->format('H.i') }}
                                     @else
-
-                                        <span class="badge badge-neutral">
-                                            Tidak Ada
-                                        </span>
-
+                                        {{ $labelWaktu[$pendaftaran->kriteria_waktu] ?? '-' }}
                                     @endif
 
-                                </td>
+                                @else
+                                    -
+                                @endif
 
+                            </div>
 
-                                {{-- KEPERLUAN --}}
+                            <div class="riwayat-aula">
+                                📍 {{ $namaAula }}
+                            </div>
 
-                                <td>
+                        </div>
 
-                                    <div
-                                        class="purpose-text"
-                                        title="{{ $pendaftaran->keperluan }}"
-                                    >
-                                        {{ $pendaftaran->keperluan ?? '-' }}
-                                    </div>
+                        <div class="riwayat-status">
 
-                                </td>
+                            @if($statusRiwayat === 'disetujui')
 
+                                <span class="badge badge-success">
+                                    ✓ Disetujui
+                                </span>
 
-                                {{-- STATUS --}}
+                            @elseif($statusRiwayat === 'ditolak')
 
-                                <td>
+                                <span class="badge badge-danger">
+                                    ✕ Ditolak
+                                </span>
 
-                                    @if($pendaftaran->status === 'disetujui')
+                            @elseif($statusRiwayat === 'dibatalkan')
 
-                                        <span class="badge badge-success">
-                                            ✓ Disetujui
-                                        </span>
+                                <span class="badge badge-cancelled">
+                                    Dibatalkan
+                                </span>
 
-                                    @elseif($pendaftaran->status === 'ditolak')
+                            @else
 
-                                        <span class="badge badge-danger">
-                                            ✕ Ditolak
-                                        </span>
+                                <span class="badge badge-pending">
+                                    ⏳ Menunggu
+                                </span>
 
-                                    @elseif($pendaftaran->status === 'dibatalkan')
+                            @endif
 
-                                        <span class="badge badge-cancelled">
-                                            Dibatalkan
-                                        </span>
+                        </div>
 
-                                    @else
+                    </a>
 
-                                        <span class="badge badge-pending">
-                                            ⏳ Menunggu
-                                        </span>
+                @endforeach
 
-                                    @endif
-
-                                </td>
-
-
-                                {{-- AKSI --}}
-
-                                <td>
-
-                                    <a
-                                        href="{{ route('pendaftaran.show', $pendaftaran) }}"
-                                        class="view-btn"
-                                    >
-                                        Lihat Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
+                <div class="riwayat-empty-search" id="riwayatEmpty" style="display:none;">
+                    Tidak ada pengajuan yang cocok.
+                </div>
 
             </div>
 
@@ -624,6 +427,46 @@
     </div>
 
 </div>
+
+
+<script>
+
+    (function () {
+
+        var search = document.getElementById('riwayatSearch');
+        var filter = document.getElementById('riwayatFilter');
+
+        if (!search || !filter) return;
+
+        function terapkan() {
+
+            var kata = search.value.trim().toLowerCase();
+            var status = filter.value;
+            var tampil = 0;
+
+            document.querySelectorAll('.riwayat-item').forEach(function (item) {
+
+                var cocokNama = item.dataset.nama.indexOf(kata) !== -1;
+                var cocokStatus = status === 'all' || item.dataset.status === status;
+                var ok = cocokNama && cocokStatus;
+
+                item.style.display = ok ? '' : 'none';
+
+                if (ok) tampil++;
+
+            });
+
+            document.getElementById('riwayatEmpty').style.display =
+                tampil === 0 ? '' : 'none';
+
+        }
+
+        search.addEventListener('input', terapkan);
+        filter.addEventListener('change', terapkan);
+
+    })();
+
+</script>
 
 
 <style>
@@ -1384,6 +1227,171 @@
 
     .header-action .primary-btn {
         width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   RIWAYAT - DAFTAR KARTU
+========================================================= */
+
+.riwayat-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 21px;
+    background: #ffffff;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.riwayat-search {
+    position: relative;
+    flex: 1;
+}
+
+.riwayat-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: .6;
+}
+
+.riwayat-search input {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 14px 0 36px;
+    background: #ffffff;
+    border: 1px solid #dfe5ec;
+    border-radius: 8px;
+    color: #1e293b;
+    font-size: 13px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.riwayat-search input:focus {
+    border-color: #12355b;
+}
+
+.riwayat-select {
+    min-height: 40px;
+    min-width: 120px;
+    padding: 0 12px;
+    background: #ffffff;
+    border: 1px solid #dfe5ec;
+    border-radius: 8px;
+    color: #1e293b;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+.riwayat-select:focus {
+    border-color: #12355b;
+}
+
+.riwayat-list {
+    padding: 8px 21px 16px;
+}
+
+.riwayat-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf1f5;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.riwayat-item:last-of-type {
+    border-bottom: none;
+}
+
+.riwayat-item:hover {
+    background: #f8fafc;
+}
+
+.riwayat-thumb {
+    width: 96px;
+    height: 72px;
+    flex: 0 0 96px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #e2e8f0;
+}
+
+.riwayat-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.riwayat-title {
+    color: #12355b;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.riwayat-meta {
+    margin-top: 5px;
+    color: #475569;
+    font-size: 12px;
+}
+
+.riwayat-aula {
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.riwayat-status {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    padding-top: 2px;
+}
+
+.riwayat-status .badge {
+    font-size: 11px;
+    padding: 6px 12px;
+}
+
+.riwayat-empty-search {
+    padding: 26px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+
+    .riwayat-toolbar {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .riwayat-list {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .riwayat-thumb {
+        width: 76px;
+        height: 62px;
+        flex-basis: 76px;
+    }
+
+    .riwayat-item {
+        gap: 12px;
     }
 
 }

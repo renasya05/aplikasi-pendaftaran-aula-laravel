@@ -35,9 +35,14 @@ class RekapKetersediaan
     |
     */
 
-    public static function build(?int $aulaId, int $tahun, ?array $bulanList = null): array
+    public static function build(?int $aulaId, int $tahun, ?array $bulanList = null, ?array $statusList = null): array
     {
         $bulanList = $bulanList ?? range(1, 12);
+
+        $statusList = $statusList ?? [
+            'menunggu',
+            'disetujui',
+        ];
 
         $awalTahun = Carbon::create(
             $tahun,
@@ -57,10 +62,7 @@ class RekapKetersediaan
         |----------------------------------------------------------------------
         */
 
-        $pendaftarans = Pendaftaran::whereIn('status', [
-            'menunggu',
-            'disetujui',
-        ])
+        $pendaftarans = Pendaftaran::whereIn('status', $statusList)
             ->where('aula_id', $aulaId)
             ->whereNotNull('tanggal_mulai')
             ->whereNotNull('tanggal_selesai')
@@ -78,6 +80,9 @@ class RekapKetersediaan
                 'pagi_siang',
                 'siang_sore',
                 'malam',
+                'gabungan_pagi_siang',
+                'gabungan_siang_malam',
+                'gabungan_pagi_malam',
             ])
             ->get();
 
@@ -105,9 +110,12 @@ class RekapKetersediaan
         ];
 
         $slotWaktu = [
-            'pagi_siang' => 'pagi',
-            'siang_sore' => 'siang',
-            'malam' => 'malam',
+            'pagi_siang' => ['pagi'],
+            'siang_sore' => ['siang'],
+            'malam' => ['malam'],
+            'gabungan_pagi_siang' => ['pagi', 'siang'],
+            'gabungan_siang_malam' => ['siang', 'malam'],
+            'gabungan_pagi_malam' => ['pagi', 'malam'],
         ];
 
 
@@ -121,11 +129,11 @@ class RekapKetersediaan
         $slotTerpakai = [];
 
         foreach ($pendaftarans as $pendaftaran) {
-            $slot = $slotWaktu[
+            $slots = $slotWaktu[
                 $pendaftaran->kriteria_waktu
-            ] ?? null;
+            ] ?? [];
 
-            if ($slot === null) {
+            if (empty($slots)) {
                 continue;
             }
 
@@ -158,9 +166,20 @@ class RekapKetersediaan
             ) {
                 $tanggalKey = $tanggal->format('Y-m-d');
 
-                $booking[$tanggalKey][$slot][] = $label;
+                foreach ($slots as $slot) {
+                    $booking[$tanggalKey][$slot][] = [
+                        'label' => $label,
+                        'status' => $pendaftaran->status,
+                    ];
 
-                $slotTerpakai[$tanggalKey][$slot] = true;
+                    if (in_array(
+                        $pendaftaran->status,
+                        ['menunggu', 'disetujui'],
+                        true
+                    )) {
+                        $slotTerpakai[$tanggalKey][$slot] = true;
+                    }
+                }
             }
         }
 
@@ -198,6 +217,27 @@ class RekapKetersediaan
 
         $rekapBulanan = [];
 
+        $renderSlot = function ($entries) {
+            if (empty($entries)) {
+                return ['', ''];
+            }
+
+            $labels = array_column($entries, 'label');
+            $labelStr = implode(', ', array_unique($labels));
+
+            $statuses = array_column($entries, 'status');
+
+            if (in_array('disetujui', $statuses, true)) {
+                $st = 'disetujui';
+            } elseif (in_array('menunggu', $statuses, true)) {
+                $st = 'menunggu';
+            } else {
+                $st = 'ditolak';
+            }
+
+            return [$labelStr, $st];
+        };
+
         foreach ($bulanList as $bulanIdx) {
             $awalBulan = Carbon::create(
                 $tahun,
@@ -233,6 +273,37 @@ class RekapKetersediaan
                     $status = 'used';
                 }
 
+                [$pagiLabel, $pagiStatus] =
+                    $renderSlot($sel['pagi'] ?? []);
+
+                [$siangLabel, $siangStatus] =
+                    $renderSlot($sel['siang'] ?? []);
+
+                [$malamLabel, $malamStatus] =
+                    $renderSlot($sel['malam'] ?? []);
+
+                $adaDitolak = in_array(
+                    'ditolak',
+                    [$pagiStatus, $siangStatus, $malamStatus],
+                    true
+                );
+
+                $adaDisetujui = in_array(
+                    'disetujui',
+                    [$pagiStatus, $siangStatus, $malamStatus],
+                    true
+                );
+
+                $adaMenunggu = in_array(
+                    'menunggu',
+                    [$pagiStatus, $siangStatus, $malamStatus],
+                    true
+                );
+
+                $adaBooking = ($pagiLabel !== ''
+                    || $siangLabel !== ''
+                    || $malamLabel !== '');
+
                 $rows[] = [
                     'key' => $tanggalKey,
 
@@ -244,20 +315,25 @@ class RekapKetersediaan
 
                     'status' => $status,
 
-                    'pagi' => implode(
-                        ', ',
-                        array_unique($sel['pagi'] ?? [])
-                    ),
+                    'pagi' => $pagiLabel,
 
-                    'siang' => implode(
-                        ', ',
-                        array_unique($sel['siang'] ?? [])
-                    ),
+                    'siang' => $siangLabel,
 
-                    'malam' => implode(
-                        ', ',
-                        array_unique($sel['malam'] ?? [])
-                    ),
+                    'malam' => $malamLabel,
+
+                    'pagiStatus' => $pagiStatus,
+
+                    'siangStatus' => $siangStatus,
+
+                    'malamStatus' => $malamStatus,
+
+                    'adaDitolak' => $adaDitolak,
+
+                    'adaDisetujui' => $adaDisetujui,
+
+                    'adaMenunggu' => $adaMenunggu,
+
+                    'adaBooking' => $adaBooking,
                 ];
             }
 

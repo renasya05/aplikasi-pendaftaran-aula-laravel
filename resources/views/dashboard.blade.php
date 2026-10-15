@@ -17,21 +17,30 @@
     }
 
     .welcome-section {
-        margin-bottom: 28px;
+        margin-bottom: 26px;
+    }
+
+    .welcome-eyebrow {
+        margin: 0 0 6px;
+
+        color: #12355b;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
     }
 
     .welcome-section h1 {
         margin: 0;
         color: #12355b;
-        font-size: 32px;
+        font-size: 28px;
         font-weight: 800;
-        text-transform: uppercase;
     }
 
     .welcome-section p {
         margin: 8px 0 0;
         color: #64748b;
-        font-size: 16px;
+        font-size: 15px;
     }
 
 
@@ -41,24 +50,21 @@
 
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
         margin-bottom: 30px;
     }
 
     .stat-card {
-        background: #ffffff;
-        border: 1px solid #dbe3ec;
-        border-radius: 13px;
-        padding: 22px;
-
-        box-shadow:
-            0 4px 14px rgba(15, 23, 42, .05);
+        background: #e9eef6;
+        border: none;
+        border-radius: 10px;
+        padding: 16px 18px;
     }
 
     .stat-label {
         color: #64748b;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 700;
         margin-bottom: 8px;
         text-transform: uppercase;
@@ -66,8 +72,157 @@
 
     .stat-number {
         color: #12355b;
-        font-size: 30px;
+        font-size: 26px;
         font-weight: 800;
+        line-height: 1;
+    }
+
+    .stat-card.is-menunggu .stat-number {
+        color: #b45309;
+    }
+
+    .stat-card.is-disetujui .stat-number {
+        color: #16a34a;
+    }
+
+    .stat-card.is-ditolak .stat-number {
+        color: #dc2626;
+    }
+
+
+    /* =====================================================
+       STATISTIK PER AULA
+    ===================================================== */
+
+    .aula-stats-section {
+        margin-bottom: 30px;
+
+        padding-top: 26px;
+        border-top: 1px solid #dbe3ec;
+    }
+
+    .aula-stats-heading {
+        margin: 0 0 6px;
+
+        color: #12355b;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .aula-stats-description {
+        margin: 0 0 18px;
+
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .aula-stats-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .aula-stat-card {
+        background: #ffffff;
+        border: 1px solid #dbe3ec;
+        border-radius: 12px;
+        padding: 18px 20px;
+
+        box-shadow:
+            0 4px 14px rgba(15, 23, 42, .05);
+    }
+
+    .aula-stat-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .aula-stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+
+        background: #e3ecf7;
+        border-radius: 10px;
+
+        color: #12355b;
+        font-size: 20px;
+    }
+
+    .aula-stat-titles {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .aula-stat-name {
+        color: #12355b;
+        font-size: 16px;
+        font-weight: 800;
+    }
+
+    .aula-stat-sub {
+        margin-top: 2px;
+
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .aula-stat-total {
+        color: #12355b;
+        font-size: 24px;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .aula-stat-rows {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+
+        margin-top: 14px;
+    }
+
+    .aula-stat-item {
+        padding: 10px 12px;
+
+        background: #f1f5f9;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .aula-stat-item .lbl {
+        display: block;
+
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .aula-stat-item .num {
+        display: block;
+
+        margin-top: 4px;
+
+        color: #12355b;
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+    .aula-stat-item.is-menunggu .num {
+        color: #b45309;
+    }
+
+    .aula-stat-item.is-disetujui .num {
+        color: #16a34a;
+    }
+
+    .aula-stat-item.is-ditolak .num {
+        color: #dc2626;
     }
 
 
@@ -84,6 +239,10 @@
             0 5px 18px rgba(15, 23, 42, .05);
 
         overflow: hidden;
+    }
+
+    #rekap {
+        scroll-margin-top: 24px;
     }
 
     .schedule-header {
@@ -252,14 +411,19 @@
     }
 
     .dot-empty {
+        background: #ffffff;
+        border: 1px solid #94a3b8;
+    }
+
+    .dot-disetujui {
         background: #16a34a;
     }
 
-    .dot-used {
-        background: #2563eb;
+    .dot-menunggu {
+        background: #facc15;
     }
 
-    .dot-full {
+    .dot-ditolak {
         background: #dc2626;
     }
 
@@ -375,7 +539,7 @@
 
     .rekap-table {
         width: 100%;
-        min-width: 720px;
+        min-width: 1000px;
 
         border-collapse: collapse;
 
@@ -453,6 +617,82 @@
         font-weight: 750;
     }
 
+    .cell-disetujui {
+        background: #dcfce7;
+        color: #166534;
+        font-weight: 750;
+    }
+
+    .cell-menunggu {
+        background: #fef9c3;
+        color: #854d0e;
+        font-weight: 750;
+    }
+
+    .cell-ditolak {
+        background: #fee2e2;
+        color: #991b1b;
+        font-weight: 750;
+    }
+
+    /* warna tetap tampil di baris Sabtu/Minggu */
+    .rekap-table tbody tr.weekend td.cell-disetujui {
+        background: #dcfce7;
+    }
+
+    .rekap-table tbody tr.weekend td.cell-menunggu {
+        background: #fef9c3;
+    }
+
+    .rekap-table tbody tr.weekend td.cell-ditolak {
+        background: #fee2e2;
+    }
+
+
+    /* =====================================================
+       LEGENDA WARNA
+    ===================================================== */
+
+    .rekap-legend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        text-transform: none;
+        font-weight: 700;
+    }
+
+    .legend-box {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid rgba(15, 23, 42, .15);
+    }
+
+    .box-disetujui {
+        background: #dcfce7;
+    }
+
+    .box-menunggu {
+        background: #fef9c3;
+    }
+
+    .box-ditolak {
+        background: #fee2e2;
+    }
+
+    .box-kosong {
+        background: #ffffff;
+    }
+
     .rekap-empty-note {
         padding: 26px;
 
@@ -486,6 +726,14 @@
 
         .stats-grid {
             grid-template-columns: 1fr;
+        }
+
+        .aula-stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .aula-stat-rows {
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .schedule-header,
@@ -526,12 +774,19 @@
 
 <div class="dashboard-page">
 
+    {{-- Navbar kanan atas: hari, notifikasi, profil --}}
+    @include('partials.topbar')
+
 
     {{-- =================================================
          WELCOME
     ================================================== --}}
 
     <section class="welcome-section">
+
+        <p class="welcome-eyebrow">
+            Dashboard SAPA
+        </p>
 
         <h1>
             Selamat Datang, {{ Auth::user()->name }}
@@ -563,7 +818,7 @@
         </div>
 
 
-        <div class="stat-card">
+        <div class="stat-card is-menunggu">
 
             <div class="stat-label">
                 Menunggu
@@ -576,7 +831,7 @@
         </div>
 
 
-        <div class="stat-card">
+        <div class="stat-card is-disetujui">
 
             <div class="stat-label">
                 Disetujui
@@ -589,7 +844,7 @@
         </div>
 
 
-        <div class="stat-card">
+        <div class="stat-card is-ditolak">
 
             <div class="stat-label">
                 Ditolak
@@ -605,10 +860,91 @@
 
 
     {{-- =================================================
+         STATISTIK PER AULA
+    ================================================== --}}
+
+    <section class="aula-stats-section">
+
+        <h2 class="aula-stats-heading">
+            Ringkasan Pendaftaran per Aula
+        </h2>
+
+        <p class="aula-stats-description">
+            Lihat jumlah pendaftaran dan statusnya untuk setiap aula.
+        </p>
+
+        <div class="aula-stats-grid">
+
+            @foreach($aulas as $aula)
+
+                @php
+                    $stat = $statistikAula[$aula->id] ?? [
+                        'total' => 0,
+                        'menunggu' => 0,
+                        'disetujui' => 0,
+                        'ditolak' => 0,
+                    ];
+                @endphp
+
+                <div class="aula-stat-card">
+
+                    <div class="aula-stat-head">
+
+                        <div class="aula-stat-icon">
+                            &#127970;
+                        </div>
+
+                        <div class="aula-stat-titles">
+
+                            <div class="aula-stat-name">
+                                {{ $aula->nama_aula }}
+                            </div>
+
+                            <div class="aula-stat-sub">
+                                Total {{ $stat['total'] }} pendaftaran
+                            </div>
+
+                        </div>
+
+                        <div class="aula-stat-total">
+                            {{ $stat['total'] }}
+                        </div>
+
+                    </div>
+
+                    <div class="aula-stat-rows">
+
+                        <div class="aula-stat-item is-menunggu">
+                            <span class="lbl">Menunggu</span>
+                            <span class="num">{{ $stat['menunggu'] }}</span>
+                        </div>
+
+                        <div class="aula-stat-item is-disetujui">
+                            <span class="lbl">Disetujui</span>
+                            <span class="num">{{ $stat['disetujui'] }}</span>
+                        </div>
+
+                        <div class="aula-stat-item is-ditolak">
+                            <span class="lbl">Ditolak</span>
+                            <span class="num">{{ $stat['ditolak'] }}</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @endforeach
+
+        </div>
+
+    </section>
+
+
+    {{-- =================================================
          REKAP
     ================================================== --}}
 
-    <section class="schedule-section">
+    <section class="schedule-section" id="rekap">
 
 
         {{-- HEADER --}}
@@ -620,8 +956,8 @@
             </h2>
 
             <p class="schedule-description">
-                Pilih aula dan lihat rekap ketersediaan harian
-                untuk bulan ini.
+                Data untuk bulan
+                {{ $rekapBulanIni['judul'] ?? \Carbon\Carbon::now()->translatedFormat('F Y') }}.
             </p>
 
         </div>
@@ -645,7 +981,7 @@
                     <a
                         href="{{ route('dashboard', [
                             'aula' => $aula->id,
-                        ]) }}"
+                        ]) }}#rekap"
                         class="aula-btn {{ $aulaTerpilih && $aulaTerpilih->id === $aula->id ? 'active' : '' }}"
                     >
                         {{ $aula->nama_aula }}
@@ -667,10 +1003,12 @@
 
                     if (str_contains($namaAulaTerpilih, 'kecil')) {
                         $ukuranTerpilih = '7,6 x 4 m';
-                        $fasilitasTerpilih = 'TV 65 inch, Sound System';
+                        $fasilitasTerpilih = 'TV 65 inch';
+                        $kapasitasTerpilih = '≤ 30 orang';
                     } else {
                         $ukuranTerpilih = '15 x 10 m';
-                        $fasilitasTerpilih = 'Sistem Audio, Videotron';
+                        $fasilitasTerpilih = 'Sistem Audio, Videotron, Lighting, Panggung';
+                        $kapasitasTerpilih = '> 100 orang';
                     }
                 @endphp
 
@@ -682,7 +1020,7 @@
 
                     <p>
                         <strong>{{ $aulaTerpilih->nama_aula }}</strong>
-                        — Kap {{ $aulaTerpilih->kapasitas > 30 ? '>' : '≤' }} 30 orang
+                        — Kap {{ $kapasitasTerpilih }}
                         ({{ $ukuranTerpilih }})
                     </p>
 
@@ -726,30 +1064,40 @@
             <button
                 type="button"
                 class="filter-btn"
-                data-filter="empty"
+                data-filter="disetujui"
+            >
+                <span class="filter-dot dot-disetujui"></span>
+                Disetujui
+            </button>
+
+
+            <button
+                type="button"
+                class="filter-btn"
+                data-filter="menunggu"
+            >
+                <span class="filter-dot dot-menunggu"></span>
+                Menunggu
+            </button>
+
+
+            <button
+                type="button"
+                class="filter-btn"
+                data-filter="ditolak"
+            >
+                <span class="filter-dot dot-ditolak"></span>
+                Ditolak
+            </button>
+
+
+            <button
+                type="button"
+                class="filter-btn"
+                data-filter="kosong"
             >
                 <span class="filter-dot dot-empty"></span>
                 Kosong
-            </button>
-
-
-            <button
-                type="button"
-                class="filter-btn"
-                data-filter="used"
-            >
-                <span class="filter-dot dot-used"></span>
-                Terpakai
-            </button>
-
-
-            <button
-                type="button"
-                class="filter-btn"
-                data-filter="full"
-            >
-                <span class="filter-dot dot-full"></span>
-                Semua Waktu Terpakai
             </button>
 
         </div>
@@ -760,8 +1108,25 @@
         ================================================== --}}
 
         <div class="rekap-legend">
-            Keterangan Unit:
-            Sekretariat, Inpub, Konpub, Aptika, Sandikami
+            <span class="legend-item">
+                <span class="legend-box box-disetujui"></span>
+                Disetujui
+            </span>
+
+            <span class="legend-item">
+                <span class="legend-box box-menunggu"></span>
+                Menunggu
+            </span>
+
+            <span class="legend-item">
+                <span class="legend-box box-ditolak"></span>
+                Ditolak
+            </span>
+
+            <span class="legend-item">
+                <span class="legend-box box-kosong"></span>
+                Kosong
+            </span>
         </div>
 
 
@@ -805,6 +1170,21 @@
                                         Malam
                                         <span>18.00 - 21.00</span>
                                     </th>
+
+                                    <th>
+                                        Pagi - Siang
+                                        <span>08.00 - 16.00</span>
+                                    </th>
+
+                                    <th>
+                                        Siang - Malam
+                                        <span>14.00 - 21.00</span>
+                                    </th>
+
+                                    <th>
+                                        Pagi - Malam
+                                        <span>08.00 - 21.00</span>
+                                    </th>
                                 </tr>
 
                             </thead>
@@ -817,6 +1197,10 @@
                                     <tr
                                         class="rekap-row {{ in_array($row['hari'], ['Sabtu', 'Minggu']) ? 'weekend' : '' }}"
                                         data-status="{{ $row['status'] }}"
+                                        data-disetujui="{{ ($row['adaDisetujui'] ?? false) ? '1' : '0' }}"
+                                        data-menunggu="{{ ($row['adaMenunggu'] ?? false) ? '1' : '0' }}"
+                                        data-ditolak="{{ ($row['adaDitolak'] ?? false) ? '1' : '0' }}"
+                                        data-booking="{{ ($row['adaBooking'] ?? false) ? '1' : '0' }}"
                                         data-tanggal="{{ $row['key'] }}"
                                     >
                                         <td class="col-tanggal">
@@ -827,23 +1211,35 @@
                                             {{ $row['hari'] }}
                                         </td>
 
-                                        <td class="{{ $row['pagi'] ? 'cell-used' : '' }}">
+                                        <td class="{{ $row['pagiStatus'] ? 'cell-' . $row['pagiStatus'] : '' }}">
                                             {{ $row['pagi'] }}
                                         </td>
 
-                                        <td class="{{ $row['siang'] ? 'cell-used' : '' }}">
+                                        <td class="{{ $row['siangStatus'] ? 'cell-' . $row['siangStatus'] : '' }}">
                                             {{ $row['siang'] }}
                                         </td>
 
-                                        <td class="{{ $row['malam'] ? 'cell-used' : '' }}">
+                                        <td class="{{ $row['malamStatus'] ? 'cell-' . $row['malamStatus'] : '' }}">
                                             {{ $row['malam'] }}
+                                        </td>
+
+                                        <td class="{{ !empty($row['pagiSiangStatus']) ? 'cell-' . $row['pagiSiangStatus'] : '' }}">
+                                            {{ $row['pagiSiang'] ?? '' }}
+                                        </td>
+
+                                        <td class="{{ !empty($row['siangMalamStatus']) ? 'cell-' . $row['siangMalamStatus'] : '' }}">
+                                            {{ $row['siangMalam'] ?? '' }}
+                                        </td>
+
+                                        <td class="{{ !empty($row['pagiMalamStatus']) ? 'cell-' . $row['pagiMalamStatus'] : '' }}">
+                                            {{ $row['pagiMalam'] ?? '' }}
                                         </td>
                                     </tr>
 
                                 @empty
 
                                     <tr>
-                                        <td colspan="5" class="rekap-empty-note">
+                                        <td colspan="8" class="rekap-empty-note">
                                             Belum ada data untuk ditampilkan.
                                         </td>
                                     </tr>
@@ -892,11 +1288,26 @@
                         .forEach(function (row) {
 
                             var status = row.dataset.status;
+                            var disetujui = row.dataset.disetujui;
+                            var menunggu = row.dataset.menunggu;
+                            var ditolak = row.dataset.ditolak;
+                            var booking = row.dataset.booking;
 
-                            var tampil = filter === 'all'
-                                || (filter === 'used'
-                                    ? (status === 'used' || status === 'full')
-                                    : status === filter);
+                            var tampil;
+
+                            if (filter === 'all') {
+                                tampil = true;
+                            } else if (filter === 'disetujui') {
+                                tampil = (disetujui === '1');
+                            } else if (filter === 'menunggu') {
+                                tampil = (menunggu === '1');
+                            } else if (filter === 'ditolak') {
+                                tampil = (ditolak === '1');
+                            } else if (filter === 'kosong') {
+                                tampil = (booking !== '1');
+                            } else {
+                                tampil = (status === filter);
+                            }
 
                             row.classList.toggle(
                                 'hidden-by-filter',

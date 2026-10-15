@@ -209,60 +209,6 @@
         }
 
         /* =====================================================
-           JUDUL DI DALAM LAYAR TV / VIDEOTRON
-        ====================================================== */
-
-        .aula-title {
-            position: absolute;
-
-            left: 0;
-            right: 0;
-
-            z-index: 2;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-
-            pointer-events: none;
-        }
-
-        /* posisi layar videotron pada foto aula besar */
-        .title-besar {
-            top: 35%;
-            height: 18%;
-        }
-
-        /* posisi layar TV pada foto aula kecil */
-        .title-kecil {
-            top: 25%;
-            height: 16%;
-        }
-
-        .aula-title h3 {
-            display: flex;
-            flex-direction: column;
-
-            font-size: 14px;
-
-            font-weight: 800;
-
-            color: white;
-
-            letter-spacing: 2px;
-
-            line-height: 1.2;
-
-            text-transform: uppercase;
-
-            text-shadow:
-                0 1px 4px rgba(0, 0, 0, 0.65);
-        }
-
-        /* =====================================================
            ISI KARTU DI BAWAH FOTO
         ====================================================== */
 
@@ -383,12 +329,6 @@
             .aula-body {
                 padding: 18px;
             }
-
-            .aula-title h3 {
-                font-size: 12px;
-
-                letter-spacing: 1.5px;
-            }
         }
     </style>
 </head>
@@ -405,12 +345,8 @@
 
             <div class="brand">
 
-                <h1>SAPA</h1>
-
-                <p>
-                    Sistem Aplikasi Pemakaian Aula
-                </p>
-
+                <h1>SISTEM</h1>
+                <p>APLIKASI UNTUK LAYANAN AKOMODASI (AULA)</p>
             </div>
 
             <a
@@ -474,7 +410,7 @@
                         $ukuran = '7,6 x 4 m';
 
                         $fasilitas =
-                            'TV 65 inch, Sound System';
+                            'TV 65 inch';
 
                     } else {
 
@@ -489,20 +425,8 @@
                             '15 x 10 m';
 
                         $fasilitas =
-                            'Sistem Audio, Videotron';
+                            'Sistem Audio, Videotron, Laptop, Panggung';
                     }
-
-                    $kata = preg_split(
-                        '/\s+/',
-                        trim($aula->nama_aula ?? '')
-                    );
-
-                    $barisSatu = $kata[0] ?? '';
-
-                    $barisDua = implode(
-                        ' ',
-                        array_slice($kata, 1)
-                    );
 
                 @endphp
 
@@ -511,7 +435,7 @@
 
 
                     {{-- ==================================================
-                         FOTO + JUDUL DI DALAM LAYAR TV
+                         FOTO (tulisan nama aula sudah ada di dalam foto)
                     =================================================== --}}
 
                     <div class="aula-photo">
@@ -520,20 +444,6 @@
                             src="{{ $foto }}"
                             alt="{{ $aula->nama_aula }}"
                         >
-
-                        <div
-                            class="aula-title {{ str_contains($namaAula, 'kecil') ? 'title-kecil' : 'title-besar' }}"
-                        >
-
-                            <h3>
-                                <span>{{ $barisSatu }}</span>
-
-                                @if ($barisDua !== '')
-                                    <span>{{ $barisDua }}</span>
-                                @endif
-                            </h3>
-
-                        </div>
 
                     </div>
 
@@ -547,7 +457,7 @@
                         <div class="aula-desc">
 
                             <p>
-                                Kap {{ $aula->kapasitas > 30 ? '>' : '≤' }} 30 orang
+                                Kap : {{ $aula->kapasitas }} orang
                                 ({{ $ukuran }})
                             </p>
 
@@ -582,6 +492,7 @@
         </div>
 
     </main>
+
 
 </body>
 

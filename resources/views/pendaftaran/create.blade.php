@@ -221,13 +221,6 @@
         margin-left: 2px;
     }
 
-    .help-text {
-        margin-top: 7px;
-        color: #64748b;
-        font-size: 13px;
-        line-height: 1.5;
-    }
-
     input,
     select,
     textarea {
@@ -624,7 +617,7 @@
             <h1>SAPA</h1>
 
             <p>
-                Sistem Aplikasi Pemanfaatan Aula
+                Sistem Aplikasi untuk Layanan Akomodasi (Aula)
             </p>
 
         </div>
@@ -850,20 +843,24 @@
                                 </option>
 
 
-                                @if(old('unit_organisasi'))
+                                @foreach ($struktur as $unit => $bagianList)
 
-                                    @foreach($struktur[old('unit_organisasi')] ?? [] as $bagian)
+                                    <optgroup label="{{ $unit }}">
 
-                                        <option
-                                            value="{{ $bagian }}"
-                                            @selected(old('bagian_seksi') == $bagian)
-                                        >
-                                            {{ $bagian }}
-                                        </option>
+                                        @foreach ($bagianList as $bagian)
 
-                                    @endforeach
+                                            <option
+                                                value="{{ $bagian }}"
+                                                @selected(old('bagian_seksi') == $bagian)
+                                            >
+                                                {{ $bagian }}
+                                            </option>
 
-                                @endif
+                                        @endforeach
+
+                                    </optgroup>
+
+                                @endforeach
 
                             </select>
 
@@ -1036,18 +1033,11 @@
                             <input
                                 type="number"
                                 name="jumlah_peserta"
-                                id="jumlah_peserta"
                                 value="{{ old('jumlah_peserta') }}"
                                 min="1"
-                                max="{{ $aula->kapasitas }}"
                                 placeholder="Masukkan jumlah peserta"
                                 required
                             >
-
-                            <div class="help-text">
-                                Maksimal {{ $aula->kapasitas }} orang
-                                (sesuai kapasitas {{ $aula->nama_aula }}).
-                            </div>
 
                         </div>
 
@@ -1171,6 +1161,7 @@
                             <div
                                 class="waktu-card"
                                 data-waktu="pagi_siang"
+                                data-slot="pagi"
                             >
 
                                 <input
@@ -1196,7 +1187,7 @@
                                     <span class="waktu-content">
 
                                         <strong>
-                                            Pagi – Siang
+                                            Pagi
                                         </strong>
 
                                         <span>
@@ -1215,6 +1206,7 @@
                             <div
                                 class="waktu-card"
                                 data-waktu="siang_sore"
+                                data-slot="siang"
                             >
 
                                 <input
@@ -1239,7 +1231,7 @@
                                     <span class="waktu-content">
 
                                         <strong>
-                                            Siang – Sore
+                                            Siang
                                         </strong>
 
                                         <span>
@@ -1258,6 +1250,7 @@
                             <div
                                 class="waktu-card"
                                 data-waktu="malam"
+                                data-slot="malam"
                             >
 
                                 <input
@@ -1287,6 +1280,138 @@
 
                                         <span>
                                             18.00 – 21.00
+                                        </span>
+
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+
+                            {{-- GABUNGAN PAGI - SIANG --}}
+
+                            <div
+                                class="waktu-card"
+                                data-waktu="gabungan_pagi_siang"
+                                data-slot="pagi,siang"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="kriteria_waktu"
+                                    id="gabungan_pagi_siang"
+                                    value="gabungan_pagi_siang"
+                                    @checked(old('kriteria_waktu') === 'gabungan_pagi_siang')
+                                >
+
+
+                                <label
+                                    for="gabungan_pagi_siang"
+                                    class="waktu-label"
+                                >
+
+                                    <span class="waktu-icon">
+                                        🌤️
+                                    </span>
+
+
+                                    <span class="waktu-content">
+
+                                        <strong>
+                                            Pagi – Siang
+                                        </strong>
+
+                                        <span>
+                                            08.00 – 16.00
+                                        </span>
+
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+
+                            {{-- GABUNGAN SIANG - MALAM --}}
+
+                            <div
+                                class="waktu-card"
+                                data-waktu="gabungan_siang_malam"
+                                data-slot="siang,malam"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="kriteria_waktu"
+                                    id="gabungan_siang_malam"
+                                    value="gabungan_siang_malam"
+                                    @checked(old('kriteria_waktu') === 'gabungan_siang_malam')
+                                >
+
+
+                                <label
+                                    for="gabungan_siang_malam"
+                                    class="waktu-label"
+                                >
+
+                                    <span class="waktu-icon">
+                                        🌆
+                                    </span>
+
+
+                                    <span class="waktu-content">
+
+                                        <strong>
+                                            Siang – Malam
+                                        </strong>
+
+                                        <span>
+                                            14.00 – 21.00
+                                        </span>
+
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+
+                            {{-- GABUNGAN PAGI - MALAM --}}
+
+                            <div
+                                class="waktu-card"
+                                data-waktu="gabungan_pagi_malam"
+                                data-slot="pagi,malam"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="kriteria_waktu"
+                                    id="gabungan_pagi_malam"
+                                    value="gabungan_pagi_malam"
+                                    @checked(old('kriteria_waktu') === 'gabungan_pagi_malam')
+                                >
+
+
+                                <label
+                                    for="gabungan_pagi_malam"
+                                    class="waktu-label"
+                                >
+
+                                    <span class="waktu-icon">
+                                        🌗
+                                    </span>
+
+
+                                    <span class="waktu-content">
+
+                                        <strong>
+                                            Pagi – Malam
+                                        </strong>
+
+                                        <span>
+                                            08.00 – 21.00
                                         </span>
 
                                     </span>
@@ -1452,58 +1577,22 @@
 
 
             /* ==========================================================
-               OPSI SUBBAGIAN / SEKSI MENGIKUTI BIDANG / UNIT
+               SINKRON UNIT DARI SUBBAGIAN / SEKSI
             ========================================================== */
 
-            function isiOpsiBagian(nilaiTerpilih) {
+            function labelUnitBagian() {
 
-                const unit =
-                    unitSelect.value;
+                const option =
+                    bagianSelect.selectedOptions[0];
 
-                const daftar =
-                    strukturOrganisasi[unit] || [];
+                const group =
+                    option
+                        ? option.closest('optgroup')
+                        : null;
 
-
-                bagianSelect.innerHTML = '';
-
-
-                const kosong =
-                    document.createElement('option');
-
-                kosong.value = '';
-
-                kosong.textContent = unit
-                    ? '-- Pilih Subbagian / Seksi --'
-                    : '-- Pilih Bidang / Unit dahulu --';
-
-                bagianSelect.appendChild(kosong);
-
-
-                daftar.forEach(
-                    function (bagian) {
-
-                        const opsi =
-                            document.createElement('option');
-
-                        opsi.value = bagian;
-
-                        opsi.textContent = bagian;
-
-                        bagianSelect.appendChild(opsi);
-
-                    }
-                );
-
-
-                if (
-                    nilaiTerpilih &&
-                    daftar.includes(nilaiTerpilih)
-                ) {
-
-                    bagianSelect.value =
-                        nilaiTerpilih;
-
-                }
+                return group
+                    ? group.label
+                    : '';
 
             }
 
@@ -1564,14 +1653,103 @@
 
 
             /* ==========================================================
+               FILTER SUBBAGIAN / SEKSI SESUAI BIDANG / UNIT
+            ========================================================== */
+
+            function tampilkanBagian(unit) {
+
+                const terpilih =
+                    bagianSelect.value;
+
+
+                bagianSelect.innerHTML = '';
+
+
+                const placeholder =
+                    document.createElement('option');
+
+                placeholder.value = '';
+
+                placeholder.textContent =
+                    '-- Pilih Subbagian / Seksi --';
+
+                bagianSelect.appendChild(placeholder);
+
+
+                Object.keys(strukturOrganisasi).forEach(
+                    function (namaUnit) {
+
+                        if (unit && namaUnit !== unit) {
+
+                            return;
+
+                        }
+
+
+                        const group =
+                            document.createElement('optgroup');
+
+                        group.label = namaUnit;
+
+
+                        strukturOrganisasi[namaUnit].forEach(
+                            function (bagian) {
+
+                                const option =
+                                    document.createElement('option');
+
+                                option.value = bagian;
+
+                                option.textContent = bagian;
+
+                                group.appendChild(option);
+
+                            }
+                        );
+
+
+                        bagianSelect.appendChild(group);
+
+                    }
+                );
+
+
+                const masihAda =
+                    Array.from(bagianSelect.options).some(
+                        function (option) {
+
+                            return option.value === terpilih;
+
+                        }
+                    );
+
+
+                bagianSelect.value =
+                    masihAda ? terpilih : '';
+
+            }
+
+
+            /* ==========================================================
                EVENT BIDANG / UNIT DAN SUBBAGIAN / SEKSI
             ========================================================== */
+
+            bagianSelect.addEventListener(
+                'change',
+                function () {
+
+                    unitSelect.value =
+                        labelUnitBagian();
+
+                }
+            );
+
 
             unitSelect.addEventListener(
                 'change',
                 function () {
 
-                    isiOpsiBagian('');
+                    tampilkanBagian(unitSelect.value);
 
                 }
             );
@@ -1663,8 +1841,8 @@
                         await response.json();
 
 
-                    const terpakai =
-                        data.terpakai || [];
+                    const slotTerpakai =
+                        data.slotTerpakai || [];
 
 
                     document
@@ -1672,17 +1850,29 @@
                         .forEach(
                             function (card) {
 
-                                const waktu =
-                                    card.dataset.waktu;
+                                const slots =
+                                    (card.dataset.slot || '')
+                                        .split(',')
+                                        .filter(
+                                            function (s) {
+                                                return s !== '';
+                                            }
+                                        );
 
 
                                 const input =
                                     card.querySelector('input');
 
 
-                                if (
-                                    terpakai.includes(waktu)
-                                ) {
+                                const bentrok =
+                                    slots.some(
+                                        function (s) {
+                                            return slotTerpakai.includes(s);
+                                        }
+                                    );
+
+
+                                if (bentrok) {
 
                                     card.classList.add(
                                         'disabled'
@@ -1806,6 +1996,18 @@
                 @json(old('bagian_seksi', ''));
 
 
+            if (oldBagian) {
+
+                bagianSelect.value =
+                    oldBagian;
+
+
+                unitSelect.value =
+                    labelUnitBagian();
+
+            }
+
+
             if (oldUnit) {
 
                 unitSelect.value =
@@ -1814,49 +2016,17 @@
             }
 
 
-            isiOpsiBagian(oldBagian);
-
-
             /* ==========================================================
                INISIALISASI
             ========================================================== */
+
+            tampilkanBagian(unitSelect.value);
 
             updateHariMulai();
 
             updateHariSelesai();
 
             ubahPeserta();
-
-
-            /* ==========================================================
-               BATAS JUMLAH PESERTA SESUAI KAPASITAS AULA
-            ========================================================== */
-
-            const jumlahPesertaInput =
-                document.getElementById('jumlah_peserta');
-
-            if (jumlahPesertaInput) {
-
-                jumlahPesertaInput.addEventListener(
-                    'input',
-                    function () {
-
-                        const maks =
-                            parseInt(jumlahPesertaInput.max, 10);
-
-                        if (
-                            !isNaN(maks) &&
-                            parseInt(jumlahPesertaInput.value, 10) > maks
-                        ) {
-
-                            jumlahPesertaInput.value = maks;
-
-                        }
-
-                    }
-                );
-
-            }
 
 
             if (tanggalMulai.value) {

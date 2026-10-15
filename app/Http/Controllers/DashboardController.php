@@ -79,6 +79,38 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | STATISTIK PER AULA (MILIK USER)
+        |--------------------------------------------------------------------------
+        */
+
+        $statistikAula = [];
+
+        foreach ($aulas as $aulaItem) {
+            $statistikAula[$aulaItem->id] = [
+                'total' => Pendaftaran::where('user_id', $user->id)
+                    ->where('aula_id', $aulaItem->id)
+                    ->count(),
+
+                'menunggu' => Pendaftaran::where('user_id', $user->id)
+                    ->where('aula_id', $aulaItem->id)
+                    ->where('status', 'menunggu')
+                    ->count(),
+
+                'disetujui' => Pendaftaran::where('user_id', $user->id)
+                    ->where('aula_id', $aulaItem->id)
+                    ->where('status', 'disetujui')
+                    ->count(),
+
+                'ditolak' => Pendaftaran::where('user_id', $user->id)
+                    ->where('aula_id', $aulaItem->id)
+                    ->where('status', 'ditolak')
+                    ->count(),
+            ];
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
         | REKAP HARIAN BULAN INI
         |--------------------------------------------------------------------------
         */
@@ -86,7 +118,8 @@ class DashboardController extends Controller
         $rekap = RekapKetersediaan::build(
             $aulaTerpilih?->id,
             $tahun,
-            [$bulanIni]
+            [$bulanIni],
+            ['menunggu', 'disetujui', 'ditolak']
         );
 
         $rekapBulanIni = $rekap['rekapBulanan'][0] ?? null;
@@ -108,7 +141,8 @@ class DashboardController extends Controller
                 'aulas',
                 'aulaTerpilih',
                 'tahun',
-                'rekapBulanIni'
+                'rekapBulanIni',
+                'statistikAula'
             )
         );
     }

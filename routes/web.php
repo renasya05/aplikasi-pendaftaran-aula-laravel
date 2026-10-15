@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PendaftaranController;
 
 
@@ -161,6 +162,30 @@ Route::middleware('auth')->group(function () {
         '/riwayat-pendaftaran/{pendaftaran}',
         [PendaftaranController::class, 'show']
     )->name('pendaftaran.show');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Batalkan Pendaftaran User
+    |--------------------------------------------------------------------------
+    */
+
+    Route::put(
+        '/riwayat-pendaftaran/{pendaftaran}/cancel',
+        [PendaftaranController::class, 'cancel']
+    )->name('pendaftaran.cancel');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Informasi
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/informasi',
+        [InformasiController::class, 'index']
+    )->name('informasi');
 
 });
 

@@ -435,10 +435,16 @@
 
                             @php
                                 $kriteriaWaktu = [
-                                    'pagi' => 'Pagi',
-                                    'siang' => 'Siang',
-                                    'sore' => 'Sore',
-                                    'malam' => 'Malam',
+                                    'pagi_siang' => 'Pagi (08.00 – 13.00)',
+                                    'siang_sore' => 'Siang (14.00 – 16.00)',
+                                    'malam' => 'Malam (18.00 – 21.00)',
+                                    'gabungan_pagi_siang' => 'Pagi – Siang (08.00 – 16.00)',
+                                    'gabungan_siang_malam' => 'Siang – Malam (14.00 – 21.00)',
+                                    'gabungan_pagi_malam' => 'Pagi – Malam (08.00 – 21.00)',
+                                    // Data lama sebelum migrasi kriteria waktu
+                                    'pagi' => 'Pagi (08.00 – 13.00)',
+                                    'siang' => 'Siang (14.00 – 16.00)',
+                                    'sore' => 'Siang (14.00 – 16.00)',
                                 ];
                             @endphp
 

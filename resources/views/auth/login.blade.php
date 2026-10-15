@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login | SAPA</title>
+    <title>Login | Sistem Aplikasi untuk Layanan Akomodasi (Aula)</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -355,19 +355,12 @@
 
         <div class="welcome-section">
 
-            <div class="brand">
-                SAPA
-            </div>
-
-            <div class="line"></div>
-
-            <h1>
-                Sistem Aplikasi<br>
-                Pemakaian Aula
-            </h1>
+            <h1>Sistem</h1> 
+            <h1>Aplikasi untuk<br>
+                Layanan Akomodasi<br>
+                (Aula)</h1>
 
             <p>
-                Selamat datang di SAPA.
                 Kelola pendaftaran dan pemakaian aula
                 dengan mudah, cepat, dan terorganisir.
             </p>
@@ -382,7 +375,7 @@
             <div class="login-header">
 
                 <h2>
-                    Selamat Datang
+                    Selamat Datang!
                 </h2>
 
                 <p>

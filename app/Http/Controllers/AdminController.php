@@ -18,18 +18,33 @@ class AdminController extends Controller
     {
         return [
             'pagi_siang' => [
-                'nama' => 'Pagi – Siang',
+                'nama' => 'Pagi',
                 'jam' => '08.00 – 13.00',
             ],
 
             'siang_sore' => [
-                'nama' => 'Siang – Sore',
+                'nama' => 'Siang',
                 'jam' => '14.00 – 16.00',
             ],
 
             'malam' => [
                 'nama' => 'Malam',
                 'jam' => '18.00 – 21.00',
+            ],
+
+            'gabungan_pagi_siang' => [
+                'nama' => 'Pagi – Siang',
+                'jam' => '08.00 – 16.00',
+            ],
+
+            'gabungan_siang_malam' => [
+                'nama' => 'Siang – Malam',
+                'jam' => '14.00 – 21.00',
+            ],
+
+            'gabungan_pagi_malam' => [
+                'nama' => 'Pagi – Malam',
+                'jam' => '08.00 – 21.00',
             ],
         ];
     }
@@ -183,6 +198,27 @@ class AdminController extends Controller
         | Cek Bentrok Jadwal
         |--------------------------------------------------------------------------
         */
+        $slotMap = [
+            'pagi_siang' => ['pagi'],
+            'siang_sore' => ['siang'],
+            'malam' => ['malam'],
+            'gabungan_pagi_siang' => ['pagi', 'siang'],
+            'gabungan_siang_malam' => ['siang', 'malam'],
+            'gabungan_pagi_malam' => ['pagi', 'malam'],
+        ];
+
+        $slotDiminta = $slotMap[
+            $pendaftaran->kriteria_waktu
+        ] ?? [];
+
+        $kriteriaBentrok = [];
+
+        foreach ($slotMap as $kriteria => $slots) {
+            if (array_intersect($slotDiminta, $slots)) {
+                $kriteriaBentrok[] = $kriteria;
+            }
+        }
+
         $bentrok = Pendaftaran::where(
                 'id',
                 '!=',
@@ -208,9 +244,9 @@ class AdminController extends Controller
                 '>=',
                 $pendaftaran->tanggal_mulai
             )
-            ->where(
+            ->whereIn(
                 'kriteria_waktu',
-                $pendaftaran->kriteria_waktu
+                $kriteriaBentrok
             )
             ->exists();
 
@@ -223,9 +259,12 @@ class AdminController extends Controller
         if ($bentrok) {
 
             $namaWaktu = [
-                'pagi_siang' => 'Pagi – Siang',
-                'siang_sore' => 'Siang – Sore',
+                'pagi_siang' => 'Pagi',
+                'siang_sore' => 'Siang',
                 'malam' => 'Malam',
+                'gabungan_pagi_siang' => 'Pagi – Siang',
+                'gabungan_siang_malam' => 'Siang – Malam',
+                'gabungan_pagi_malam' => 'Pagi – Malam',
             ];
 
             $waktu = $namaWaktu[
@@ -326,21 +365,28 @@ class AdminController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Rekap Harian Per Bulan
+        | Rekap Harian Bulan Berjalan
         |--------------------------------------------------------------------------
         |
-        | Format laporan disamakan dengan rekap pada
-        | dashboard pengguna: tabel harian bertumpuk
-        | untuk setiap bulan pada tahun yang dipilih.
+        | Laporan hanya menampilkan bulan yang sedang berjalan
+        | (realtime). Contoh: jika sekarang bulan Oktober,
+        | maka hanya Oktober yang ditampilkan.
+        |
+        | Zona waktu dikunci ke Asia/Jakarta agar pergantian
+        | bulan mengikuti waktu setempat, bukan UTC.
         |
         */
-        $tahun = RekapKetersediaan::tahunAktif(
-            $request->input('tahun')
-        );
+        $sekarang = now('Asia/Jakarta');
+
+        $tahun = (int) $sekarang->format('Y');
+
+        $bulan = (int) $sekarang->format('n');
 
         $rekap = RekapKetersediaan::build(
             $aulaTerpilih?->id,
-            $tahun
+            $tahun,
+            [$bulan],
+            ['menunggu', 'disetujui', 'ditolak']
         );
 
         return view('admin.laporan', [
@@ -350,11 +396,9 @@ class AdminController extends Controller
 
             'rekapBulanan' => $rekap['rekapBulanan'],
 
-            'tahun' => $rekap['tahun'],
+            'tahun' => $tahun,
 
-            'tahunSebelumnya' => $rekap['tahunSebelumnya'],
-
-            'tahunBerikutnya' => $rekap['tahunBerikutnya'],
+            'judulBulan' => $rekap['rekapBulanan'][0]['judul'],
         ]);
     }
 

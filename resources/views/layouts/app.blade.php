@@ -161,62 +161,11 @@
         }
 
 
-        /* =========================================================
-           SIDEBAR USER
-        ========================================================= */
-
-        .sidebar-user {
-            padding: 20px 20px 16px;
-
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-
-        .sidebar-user-avatar {
-            width: 42px;
-            height: 42px;
-
-            border-radius: 50%;
-
-            background: rgba(255, 255, 255, 0.16);
-            color: white;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 15px;
-            font-weight: 700;
-
-            flex-shrink: 0;
-        }
-
-
-        .sidebar-user-info {
-            min-width: 0;
-        }
-
-
-        .sidebar-user-name {
-            color: white;
-
-            font-size: 14px;
-            font-weight: 700;
-
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-
-        .sidebar-user-role {
-            color: rgba(255, 255, 255, 0.68);
-
-            font-size: 12px;
-
-            margin-top: 2px;
+        .sidebar-brand-text strong.sidebar-brand-title {
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.35;
+            letter-spacing: 0.3px;
         }
 
 
@@ -1029,12 +978,6 @@
             }
 
 
-            .sidebar-user {
-                padding-left: 16px;
-                padding-right: 16px;
-            }
-
-
             .grid-4 {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
@@ -1069,11 +1012,6 @@
 
             .sidebar-brand {
                 padding: 18px 20px;
-            }
-
-
-            .sidebar-user {
-                padding: 14px 20px;
             }
 
 
@@ -1267,47 +1205,15 @@
 
                     <div class="sidebar-brand-text">
 
-                        <strong>SAPA</strong>
-
-                        <span>
-                            Sistem Aplikasi<br>
-                            Pemakaian Aula
-                        </span>
+                        <strong class="sidebar-brand-title">
+                            SISTEM APLIKASI UNTUK LAYANAN AKOMODASI (AULA)
+                        </strong>
 
                     </div>
 
                 </div>
 
             </a>
-
-
-            {{-- USER --}}
-
-            <div class="sidebar-user">
-
-                <div class="sidebar-user-avatar">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-
-                <div class="sidebar-user-info">
-
-                    <div class="sidebar-user-name">
-                        {{ Auth::user()->name }}
-                    </div>
-
-                    <div class="sidebar-user-role">
-
-                        @if(Auth::user()->isAdmin())
-                            Administrator
-                        @else
-                            Pengguna
-                        @endif
-
-                    </div>
-
-                </div>
-
-            </div>
 
 
             {{-- NAVIGATION --}}
@@ -1386,6 +1292,15 @@
                     >
                         <span class="sidebar-icon">▤</span>
                         <span>Riwayat Pendaftaran</span>
+                    </a>
+
+
+                    <a
+                        href="{{ route('informasi') }}"
+                        class="{{ request()->routeIs('informasi') ? 'active' : '' }}"
+                    >
+                        <span class="sidebar-icon">ℹ</span>
+                        <span>Informasi</span>
                     </a>
 
                 @endif
@@ -1468,7 +1383,7 @@
         @auth
 
             <footer class="footer">
-                © {{ date('Y') }} SAPA — Sistem Aplikasi Pemakaian Aula
+                © {{ date('Y') }} SAPA — Sistem Aplikasi untuk Layanan Akomodasi (Aula)
             </footer>
 
         @endauth

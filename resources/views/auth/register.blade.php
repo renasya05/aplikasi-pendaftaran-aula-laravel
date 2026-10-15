@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Registrasi - SAPA</title>
+    <title>Registrasi - Sistem Aplikasi untuk Layanan Akomodasi (Aula)</title>
 
     <style>
         * {
@@ -55,7 +55,8 @@
 
         .title {
             text-align: center;
-            font-size: 25px;
+            font-size: 20px;
+            line-height: 1.3;
             color: #1f2933;
             margin-bottom: 7px;
         }
@@ -164,7 +165,8 @@
         </div>
 
         <h1 class="title">
-            SAPA
+            Sistem Aplikasi untuk
+            Layanan Akomodasi (Aula)
         </h1>
 
         <p class="subtitle">
@@ -298,7 +300,7 @@
 
 
     <div class="footer">
-        SAPA &copy; {{ date('Y') }}
+        Sistem Aplikasi untuk Layanan Akomodasi (Aula) &copy; {{ date('Y') }}
     </div>
 
 </div>

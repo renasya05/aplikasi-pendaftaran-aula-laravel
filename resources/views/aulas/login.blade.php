@@ -363,13 +363,14 @@
 
             <div class="line"></div>
 
+            <p>Selamat Datang
+
             <h1>
                 Sistem Aplikasi<br>
                 Pemakaian Aula
             </h1>
 
             <p>
-                Selamat datang di SAPA.
                 Kelola pendaftaran dan pemakaian aula
                 dengan mudah, cepat, dan terorganisir.
             </p>

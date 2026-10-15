@@ -460,10 +460,16 @@
 
                             @php
                                 $kriteriaWaktu = [
-                                    'pagi' => 'Pagi',
-                                    'siang' => 'Siang',
-                                    'sore' => 'Sore',
-                                    'malam' => 'Malam',
+                                    'pagi_siang' => 'Pagi (08.00 – 13.00)',
+                                    'siang_sore' => 'Siang (14.00 – 16.00)',
+                                    'malam' => 'Malam (18.00 – 21.00)',
+                                    'gabungan_pagi_siang' => 'Pagi – Siang (08.00 – 16.00)',
+                                    'gabungan_siang_malam' => 'Siang – Malam (14.00 – 21.00)',
+                                    'gabungan_pagi_malam' => 'Pagi – Malam (08.00 – 21.00)',
+                                    // Data lama sebelum migrasi kriteria waktu
+                                    'pagi' => 'Pagi (08.00 – 13.00)',
+                                    'siang' => 'Siang (14.00 – 16.00)',
+                                    'sore' => 'Siang (14.00 – 16.00)',
                                 ];
                             @endphp
 
@@ -662,6 +668,27 @@
             >
                 ← Dashboard
             </a>
+
+
+            @if($pendaftaran->status === 'menunggu')
+
+                <form
+                    action="{{ route('pendaftaran.cancel', $pendaftaran) }}"
+                    method="POST"
+                    onsubmit="return confirm('Yakin ingin membatalkan pengajuan ini? Status akan berubah menjadi Dibatalkan dan tidak dapat diubah lagi.')"
+                >
+                    @csrf
+                    @method('PUT')
+
+                    <button
+                        type="submit"
+                        class="cancel-btn"
+                    >
+                        Batalkan Pengajuan
+                    </button>
+                </form>
+
+            @endif
 
         </div>
 
@@ -1145,6 +1172,29 @@
     background: #0e2947;
     border-color: #0e2947;
     color: white;
+    transform: translateY(-1px);
+}
+
+.cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 39px;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: 1px solid #dc2626;
+    background: #dc2626;
+    color: white;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.cancel-btn:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
     transform: translateY(-1px);
 }
 

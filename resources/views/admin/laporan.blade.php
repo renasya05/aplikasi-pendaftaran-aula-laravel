@@ -190,6 +190,10 @@
         justify-self: end;
     }
 
+    .month-navigation.month-current {
+        display: block;
+    }
+
     .month-title {
         color: #12355b;
         font-size: 20px;
@@ -257,6 +261,40 @@
         font-size: 12px;
         font-weight: 800;
         text-transform: uppercase;
+    }
+
+    .legend-status {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 16px;
+        margin-top: 4px;
+        margin-bottom: 12px;
+    }
+
+    .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .legend-box {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid #cbd5e1;
+    }
+
+    .box-disetujui {
+        background: #dcfce7;
+    }
+
+    .box-menunggu {
+        background: #fef9c3;
+    }
+
+    .box-ditolak {
+        background: #fee2e2;
     }
 
     .rekap-month {
@@ -351,6 +389,24 @@
         font-weight: 750;
     }
 
+    .rekap-table tbody td.cell-disetujui {
+        background: #dcfce7;
+        color: #166534;
+        font-weight: 750;
+    }
+
+    .rekap-table tbody td.cell-menunggu {
+        background: #fef9c3;
+        color: #854d0e;
+        font-weight: 750;
+    }
+
+    .rekap-table tbody td.cell-ditolak {
+        background: #fee2e2;
+        color: #991b1b;
+        font-weight: 750;
+    }
+
     /* =========================
        PRINT
     ========================= */
@@ -396,17 +452,40 @@
         }
     }
 
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+
     @media print {
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
         body {
             background: #ffffff !important;
         }
 
+        /* sembunyikan kerangka aplikasi (sidebar, nav, dll) */
+        .sidebar,
         nav,
         .navbar,
         header,
         footer,
         .no-print {
             display: none !important;
+        }
+
+        .app-wrapper {
+            margin-left: 0 !important;
+        }
+
+        .main-content {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .laporan-page {
@@ -428,52 +507,56 @@
         }
 
         .report-top {
-            border: none;
-            padding: 0 0 15px;
-        }
-
-        .report-title {
             display: none;
         }
 
         .print-header {
             display: block;
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            background: #eef4fb;
+            border: 1px solid #c9d8ea;
+            border-radius: 8px;
         }
 
         .print-header h1 {
             margin: 0;
-            font-size: 20px;
-            color: #000000;
+            font-size: 19px;
+            color: #12355b;
         }
 
         .print-header h2 {
-            margin: 5px 0 0;
-            font-size: 15px;
-            color: #222222;
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: #1d4f7a;
         }
 
         .print-header p {
-            margin: 5px 0;
+            margin: 4px 0 0;
             font-size: 11px;
-            color: #333333;
+            color: #334155;
         }
 
         .rekap-legend {
             margin: 0 0 10px;
-            color: #000000;
+            color: #334155;
+            font-size: 9px;
         }
 
         .rekap-month {
             padding: 0;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .rekap-month-title {
-            color: #000000;
-            font-size: 13px;
-            margin-bottom: 6px;
+            color: #12355b;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            padding: 4px 8px;
+            background: #e3ecf7;
+            border-left: 3px solid #12355b;
         }
 
         .rekap-table-scroll {
@@ -485,29 +568,65 @@
         .rekap-table {
             min-width: 0;
             width: 100%;
+            border-collapse: collapse;
+        }
+
+        .rekap-table thead {
+            display: table-header-group;
+        }
+
+        .rekap-table tr {
+            break-inside: avoid;
         }
 
         .rekap-table thead th {
-            background: transparent !important;
-            color: #000000 !important;
-            border: 1px solid #999999;
-            padding: 7px;
+            background: #12355b !important;
+            color: #ffffff !important;
+            border: 1px solid #12355b;
+            padding: 6px;
             font-size: 9px;
+        }
+
+        .rekap-table thead th span {
+            color: #dbeafe;
         }
 
         .rekap-table tbody td {
-            border: 1px solid #999999;
-            padding: 7px;
+            border: 1px solid #b9c6d6;
+            padding: 5px 6px;
             font-size: 9px;
-            color: #000000;
+            color: #1e293b;
+        }
+
+        .rekap-table tbody tr:nth-child(even) td {
+            background: #f4f7fb;
         }
 
         .rekap-table tbody tr.weekend td {
-            background: transparent;
+            background: #eef1f5;
+        }
+
+        .rekap-table tbody td.cell-disetujui {
+            background: #dcfce7 !important;
+            color: #166534;
+            font-weight: 700;
+        }
+
+        .rekap-table tbody td.cell-menunggu {
+            background: #fef9c3 !important;
+            color: #854d0e;
+            font-weight: 700;
+        }
+
+        .rekap-table tbody td.cell-ditolak {
+            background: #fee2e2 !important;
+            color: #991b1b;
+            font-weight: 700;
         }
 
         .cell-used {
-            color: #000000;
+            color: #1d4ed8;
+            font-weight: 700;
         }
     }
 </style>
@@ -530,8 +649,8 @@
             </h1>
 
             <p>
-                Rekap ketersediaan harian untuk setiap bulan dalam
-                setahun, sesuai aula yang dipilih.
+                Rekap ketersediaan harian untuk bulan berjalan,
+                sesuai aula yang dipilih.
             </p>
 
         </div>
@@ -554,7 +673,6 @@
                 <a
                     href="{{ route('admin.laporan', [
                         'aula' => $aula->id,
-                        'tahun' => $tahun,
                     ]) }}"
                     class="aula-btn {{ $aulaTerpilih && $aulaTerpilih->id === $aula->id ? 'active' : '' }}"
                 >
@@ -569,31 +687,13 @@
 
 
     {{-- =========================
-         TAHUN
+         BULAN BERJALAN
     ========================= --}}
-    <div class="month-navigation no-print">
-
-        <a
-            href="{{ route('admin.laporan', [
-                'aula' => $aulaTerpilih?->id,
-                'tahun' => $tahunSebelumnya,
-            ]) }}"
-        >
-            ← Tahun Sebelumnya
-        </a>
+    <div class="month-navigation month-current no-print">
 
         <div class="month-title">
-            Tahun {{ $tahun }}
+            {{ $judulBulan }}
         </div>
-
-        <a
-            href="{{ route('admin.laporan', [
-                'aula' => $aulaTerpilih?->id,
-                'tahun' => $tahunBerikutnya,
-            ]) }}"
-        >
-            Tahun Berikutnya →
-        </a>
 
     </div>
 
@@ -611,11 +711,11 @@
             </h1>
 
             <h2>
-                SAPA — Sistem Aplikasi Pemanfaatan Aula
+                SAPA — Sistem Aplikasi untuk Layanan Akomodasi (Aula)
             </h2>
 
             <p>
-                Tahun {{ $tahun }}
+                {{ $judulBulan }}
                 —
                 {{ $aulaTerpilih->nama_aula ?? 'Semua Aula' }}
             </p>
@@ -639,8 +739,8 @@
                     </h2>
 
                     <p>
-                        Menampilkan 12 bulan tahun
-                        {{ $tahun }}
+                        Menampilkan bulan
+                        {{ $judulBulan }}
                         untuk
                         {{ $aulaTerpilih->nama_aula ?? 'semua aula' }}.
                     </p>
@@ -665,6 +765,25 @@
         <div class="rekap-legend">
             Keterangan Unit:
             Sekretariat, Inpub, Konpub, Aptika, Sandikami
+        </div>
+
+        <div class="rekap-legend legend-status">
+            <span class="legend-title">Keterangan Status:</span>
+
+            <span class="legend-item">
+                <span class="legend-box box-disetujui"></span>
+                Disetujui
+            </span>
+
+            <span class="legend-item">
+                <span class="legend-box box-menunggu"></span>
+                Menunggu
+            </span>
+
+            <span class="legend-item">
+                <span class="legend-box box-ditolak"></span>
+                Ditolak
+            </span>
         </div>
 
 
@@ -724,15 +843,15 @@
                                         {{ $row['hari'] }}
                                     </td>
 
-                                    <td class="{{ $row['pagi'] ? 'cell-used' : '' }}">
+                                    <td class="{{ $row['pagiStatus'] ? 'cell-' . $row['pagiStatus'] : '' }}">
                                         {{ $row['pagi'] }}
                                     </td>
 
-                                    <td class="{{ $row['siang'] ? 'cell-used' : '' }}">
+                                    <td class="{{ $row['siangStatus'] ? 'cell-' . $row['siangStatus'] : '' }}">
                                         {{ $row['siang'] }}
                                     </td>
 
-                                    <td class="{{ $row['malam'] ? 'cell-used' : '' }}">
+                                    <td class="{{ $row['malamStatus'] ? 'cell-' . $row['malamStatus'] : '' }}">
                                         {{ $row['malam'] }}
                                     </td>
                                 </tr>

@@ -147,7 +147,7 @@
 
                     @forelse($pendaftarans as $index => $pendaftaran)
 
-                        <tr>
+                        <tr class="row-{{ $pendaftaran->status }}">
 
                             @php
                                 $asal = $pendaftaran->peserta_asal;
@@ -290,14 +290,14 @@
 
                                         @case('pagi_siang')
                                             <span class="time-badge pagi">
-                                                Pagi – Siang
+                                                Pagi
                                                 (08.00 – 13.00)
                                             </span>
                                             @break
 
                                         @case('siang_sore')
                                             <span class="time-badge siang">
-                                                Siang – Sore
+                                                Siang
                                                 (14.00 – 16.00)
                                             </span>
                                             @break
@@ -306,6 +306,27 @@
                                             <span class="time-badge malam">
                                                 Malam
                                                 (18.00 – 21.00)
+                                            </span>
+                                            @break
+
+                                        @case('gabungan_pagi_siang')
+                                            <span class="time-badge pagi">
+                                                Pagi – Siang
+                                                (08.00 – 16.00)
+                                            </span>
+                                            @break
+
+                                        @case('gabungan_siang_malam')
+                                            <span class="time-badge siang">
+                                                Siang – Malam
+                                                (14.00 – 21.00)
+                                            </span>
+                                            @break
+
+                                        @case('gabungan_pagi_malam')
+                                            <span class="time-badge malam">
+                                                Pagi – Malam
+                                                (08.00 – 21.00)
                                             </span>
                                             @break
 
@@ -378,7 +399,7 @@
 
                                 @elseif($pendaftaran->status === 'dibatalkan')
 
-                                    <span class="badge badge-danger">
+                                    <span class="badge badge-neutral">
                                         × DIBATALKAN
                                     </span>
 
@@ -921,6 +942,64 @@ tbody tr:hover {
 .badge-danger {
     background: #fee2e2;
     color: #b91c1c;
+}
+
+.badge-neutral {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+
+/* =========================
+   WARNA BARIS PER STATUS
+========================= */
+
+tbody tr.row-disetujui td {
+    background: #f0fdf4;
+}
+
+tbody tr.row-menunggu td {
+    background: #fefce8;
+}
+
+tbody tr.row-ditolak td {
+    background: #fef2f2;
+}
+
+tbody tr.row-dibatalkan td {
+    background: #f1f5f9;
+}
+
+tbody tr.row-disetujui:hover td {
+    background: #dcfce7;
+}
+
+tbody tr.row-menunggu:hover td {
+    background: #fef9c3;
+}
+
+tbody tr.row-ditolak:hover td {
+    background: #fee2e2;
+}
+
+tbody tr.row-dibatalkan:hover td {
+    background: #e2e8f0;
+}
+
+tbody tr.row-disetujui td:first-child {
+    border-left: 4px solid #16a34a;
+}
+
+tbody tr.row-menunggu td:first-child {
+    border-left: 4px solid #facc15;
+}
+
+tbody tr.row-ditolak td:first-child {
+    border-left: 4px solid #dc2626;
+}
+
+tbody tr.row-dibatalkan td:first-child {
+    border-left: 4px solid #94a3b8;
 }
 
 
