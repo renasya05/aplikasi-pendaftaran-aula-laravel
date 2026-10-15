@@ -25,6 +25,9 @@ return new class extends Migration
                 ->default('tidak_ada')
                 ->after('jumlah_peserta');
 
+            // SQLite menolak drop column yang masih diindeks.
+            $table->dropIndex(['jenis_kegiatan']);
+
             $table->dropColumn([
                 'jenis_kegiatan',
                 'peserta_instansi',
@@ -41,6 +44,8 @@ return new class extends Migration
                 'pihak_luar',
                 'gabungan'
             ])->nullable();
+
+            $table->index('jenis_kegiatan');
 
             $table->unsignedInteger('peserta_instansi')
                 ->default(0);

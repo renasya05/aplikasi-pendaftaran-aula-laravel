@@ -22,7 +22,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pendaftarans', function (Blueprint $table) {
-            $table->string('jenis_aula')->nullable();
+            // 2026_09_21_124758 juga mengembalikan jenis_aula;
+            // tanpa guard, rollback satu batch gagal dengan duplicate column.
+            if (!Schema::hasColumn('pendaftarans', 'jenis_aula')) {
+                $table->string('jenis_aula')->nullable();
+            }
+
             $table->string('nomor_hp')->nullable();
         });
     }

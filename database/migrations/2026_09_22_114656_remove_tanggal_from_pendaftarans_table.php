@@ -12,6 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pendaftarans', function (Blueprint $table) {
+            // SQLite menolak drop column yang masih diindeks.
+            $table->dropIndex(['aula_id', 'tanggal']);
+
             $table->dropColumn('tanggal');
         });
     }
@@ -22,7 +25,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pendaftarans', function (Blueprint $table) {
-            $table->date('tanggal');
+            // Nullable: tabel sudah berisi baris, kolom NOT NULL tanpa
+            // default tidak bisa ditambahkan ke tabel terisi.
+            $table->date('tanggal')->nullable();
+
+            $table->index(['aula_id', 'tanggal']);
         });
     }
 };
