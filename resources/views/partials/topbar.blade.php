@@ -267,6 +267,10 @@
         background: #f59e0b;
     }
 
+    .topbar .tb-item.dibatalkan .tb-dot {
+        background: #94a3b8;
+    }
+
     .topbar .tb-item-text strong {
         display: block;
 
@@ -488,6 +492,8 @@
                                     Pengajuan {{ $tbNamaAula }} disetujui
                                 @elseif ($n->status === 'ditolak')
                                     Pengajuan {{ $tbNamaAula }} ditolak
+                                @elseif ($n->status === 'dibatalkan')
+                                    Pengajuan {{ $tbNamaAula }} dibatalkan
                                 @else
                                     Pengajuan {{ $tbNamaAula }} menunggu persetujuan
                                 @endif
@@ -689,8 +695,10 @@
         var unread = 0;
 
         items.forEach(function (it) {
+            // Hanya perubahan status oleh admin yang dibaca sebagai
+            // notifikasi baru; dibatalkan oleh user sendiri bukan.
             var isUnread =
-                it.getAttribute('data-status') !== 'menunggu' &&
+                ['disetujui', 'ditolak'].indexOf(it.getAttribute('data-status')) !== -1 &&
                 parseInt(it.getAttribute('data-ts'), 10) > lastRead;
 
             it.classList.toggle('unread', isUnread);
