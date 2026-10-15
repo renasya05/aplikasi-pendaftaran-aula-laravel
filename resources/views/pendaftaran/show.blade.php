@@ -521,15 +521,35 @@
 
                         <strong>
 
-                            @if($pendaftaran->jenis_pemohon === 'internal')
+                            @php
+                                // Baris lama belum punya peserta_asal,
+                                // diturunkan dari unit_organisasi/instansi
+                                // sama seperti di riwayat admin.
+                                $asal = $pendaftaran->peserta_asal;
+
+                                if (!$asal) {
+                                    if (!$pendaftaran->unit_organisasi) {
+                                        $asal = 'eksternal';
+                                    } elseif (
+                                        $pendaftaran->instansi &&
+                                        $pendaftaran->instansi !== 'DISKOMINFO'
+                                    ) {
+                                        $asal = 'internal_eksternal';
+                                    } else {
+                                        $asal = 'internal';
+                                    }
+                                }
+                            @endphp
+
+                            @if($asal === 'internal')
 
                                 Internal
 
-                            @elseif($pendaftaran->jenis_pemohon === 'eksternal')
+                            @elseif($asal === 'eksternal')
 
                                 Eksternal
 
-                            @elseif($pendaftaran->jenis_pemohon === 'internal_eksternal')
+                            @elseif($asal === 'internal_eksternal')
 
                                 Internal & Eksternal
 

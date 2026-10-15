@@ -208,7 +208,7 @@
             @php
                 $labelWaktu = [
                     'pagi_siang' => '08.00 - 13.00',
-                    'siang_sore' => '15.00 - 16.00',
+                    'siang_sore' => '14.00 - 16.00',
                     'malam' => '18.00 - 21.00',
                     'gabungan_pagi_siang' => '08.00 - 16.00',
                     'gabungan_siang_malam' => '14.00 - 21.00',
@@ -305,13 +305,7 @@
 
                                     •
 
-                                    @if($pendaftaran->jam_mulai && $pendaftaran->jam_selesai)
-                                        {{ \Carbon\Carbon::parse($pendaftaran->jam_mulai)->format('H.i') }}
-                                        -
-                                        {{ \Carbon\Carbon::parse($pendaftaran->jam_selesai)->format('H.i') }}
-                                    @else
-                                        {{ $labelWaktu[$pendaftaran->kriteria_waktu] ?? '-' }}
-                                    @endif
+                                    {{ $labelWaktu[$pendaftaran->kriteria_waktu] ?? '-' }}
 
                                 @else
                                     -

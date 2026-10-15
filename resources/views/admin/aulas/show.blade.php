@@ -512,7 +512,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>
                                         <strong>{{ $pendaftaran->nama_pemohon }}</strong>
-                                        <div style="font-size:11px; color:#6b7280;">{{ $pendaftaran->email }}</div>
+                                        <div style="font-size:11px; color:#6b7280;">{{ $pendaftaran->jabatan }}</div>
                                     </td>
                                    <td>
                                         @if ($pendaftaran->tanggal_mulai && $pendaftaran->tanggal_selesai)
@@ -540,8 +540,19 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ \Carbon\Carbon::parse($pendaftaran->jam_mulai)->format('H:i') }} -
-                                        {{ \Carbon\Carbon::parse($pendaftaran->jam_selesai)->format('H:i') }}
+                                        @php
+                                            // Kolom jam_mulai/jam_selesai sudah
+                                            // dihapus; waktu ada di kriteria_waktu.
+                                            $jam = [
+                                                'pagi_siang' => '08.00 - 13.00',
+                                                'siang_sore' => '14.00 - 16.00',
+                                                'malam' => '18.00 - 21.00',
+                                                'gabungan_pagi_siang' => '08.00 - 16.00',
+                                                'gabungan_siang_malam' => '14.00 - 21.00',
+                                                'gabungan_pagi_malam' => '08.00 - 21.00',
+                                            ][$pendaftaran->kriteria_waktu] ?? '-';
+                                        @endphp
+                                        {{ $jam }}
                                     </td>
                                     <td>{{ $pendaftaran->jumlah_peserta }} orang</td>
                                     <td>

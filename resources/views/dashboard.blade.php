@@ -1163,7 +1163,7 @@
 
                                     <th>
                                         Siang
-                                        <span>15.00 - 16.00</span>
+                                        <span>14.00 - 16.00</span>
                                     </th>
 
                                     <th>
