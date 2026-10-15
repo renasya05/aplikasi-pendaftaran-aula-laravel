@@ -234,12 +234,15 @@ class AdminController extends Controller
             )
             ->whereNotNull('tanggal_mulai')
             ->whereNotNull('tanggal_selesai')
-            ->where(
+            // whereDate, bukan where: kolom date menyimpan
+            // "2026-10-20 00:00:00", sehingga perbandingan string
+            // dengan "2026-10-20" selalu salah.
+            ->whereDate(
                 'tanggal_mulai',
                 '<=',
                 $pendaftaran->tanggal_selesai
             )
-            ->where(
+            ->whereDate(
                 'tanggal_selesai',
                 '>=',
                 $pendaftaran->tanggal_mulai

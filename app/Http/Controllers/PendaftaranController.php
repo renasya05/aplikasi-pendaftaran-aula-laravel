@@ -345,12 +345,16 @@ class PendaftaranController extends Controller
             ->whereNotNull(
                 'tanggal_selesai'
             )
-            ->where(
+            // whereDate, bukan where: kolom date menyimpan
+            // "2026-10-20 00:00:00", sehingga perbandingan
+            // string dengan "2026-10-20" selalu salah dan
+            // bentrok tidak pernah terdeteksi.
+            ->whereDate(
                 'tanggal_mulai',
                 '<=',
                 $validated['tanggal_selesai']
             )
-            ->where(
+            ->whereDate(
                 'tanggal_selesai',
                 '>=',
                 $validated['tanggal_mulai']
@@ -509,12 +513,15 @@ class PendaftaranController extends Controller
             ->whereNotNull(
                 'tanggal_selesai'
             )
-            ->where(
+            // whereDate, bukan where: kolom date menyimpan
+            // "2026-10-20 00:00:00", sehingga perbandingan string
+            // dengan "2026-10-20" selalu salah.
+            ->whereDate(
                 'tanggal_mulai',
                 '<=',
                 $validated['tanggal_selesai']
             )
-            ->where(
+            ->whereDate(
                 'tanggal_selesai',
                 '>=',
                 $validated['tanggal_mulai']
