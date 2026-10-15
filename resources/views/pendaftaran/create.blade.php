@@ -1,648 +1,26 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'Pendaftaran Aula | SAPA')
 
-    <title>Pendaftaran Aula | SAPA</title>
+@section('content')
 
-   <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <div class="card">
 
-    html {
-        scroll-behavior: smooth;
-    }
+        {{-- ======================================================
+            TOMBOL KEMBALI
+        ======================================================= --}}
 
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #12355b;
-        color: #1f2937;
-        min-height: 100vh;
-        line-height: 1.6;
-        padding-bottom: 45px;
-    }
+        <div class="top-action">
 
-    /* =========================
-       HEADER
-    ========================== */
-
-    .header {
-        background: transparent;
-        color: white;
-        padding: 30px 5% 20px;
-    }
-
-    .header-inner {
-        width: 94%;
-        max-width: 1240px;
-        margin: auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 25px;
-    }
-
-    .header-brand {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .header h1 {
-        font-size: 32px;
-        margin-bottom: 3px;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-    }
-
-    .header p {
-        font-size: 17px;
-        opacity: 0.92;
-    }
-
-    /* =========================
-       CONTAINER
-    ========================== */
-
-    .container {
-        width: 94%;
-        max-width: 1240px;
-        margin: 8px auto 0;
-    }
-
-    .card {
-        background: #ffffff;
-        border-radius: 18px;
-        padding: 38px 42px 42px;
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
-    }
-
-    /* =========================
-       TOMBOL KEMBALI
-    ========================== */
-
-    .top-action {
-        margin-bottom: 24px;
-    }
-
-    .btn-back-top {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        min-height: 42px;
-        padding: 9px 16px;
-        background: #e8edf3;
-        color: #334155;
-        border: 1px solid #d5dde7;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 15px;
-        font-weight: 700;
-        transition: all 0.2s ease;
-    }
-
-    .btn-back-top:hover {
-        background: #dce4ed;
-        color: #12355b;
-        transform: translateY(-1px);
-    }
-
-    /* =========================
-       INFO AULA
-    ========================== */
-
-    .aula-info {
-        background: #f1f6fa;
-        border: 1px solid #d9e4ee;
-        border-left: 6px solid #12355b;
-        padding: 21px 23px;
-        border-radius: 10px;
-        margin-bottom: 34px;
-    }
-
-    .aula-info .label {
-        display: block;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 4px;
-    }
-
-    .aula-info h2 {
-        color: #12355b;
-        font-size: 25px;
-        font-weight: 800;
-    }
-
-    /* =========================
-       ALERT
-    ========================== */
-
-    .alert {
-        padding: 16px 18px;
-        border-radius: 10px;
-        margin-bottom: 26px;
-        font-size: 16px;
-    }
-
-    .alert-danger {
-        background: #fee2e2;
-        border: 1px solid #fecaca;
-        color: #991b1b;
-    }
-
-    .alert-danger strong {
-        display: block;
-        margin-bottom: 6px;
-    }
-
-    .alert-danger ul {
-        padding-left: 22px;
-    }
-
-    /* =========================
-       SECTION
-    ========================== */
-
-    .section {
-        margin-bottom: 36px;
-        padding-bottom: 34px;
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-    .section:last-of-type {
-        border-bottom: none;
-        margin-bottom: 5px;
-    }
-
-    .section-title {
-        color: #12355b;
-        font-size: 22px;
-        font-weight: 800;
-        margin-bottom: 23px;
-        padding-left: 13px;
-        border-left: 5px solid #12355b;
-        line-height: 1.35;
-        text-transform: uppercase;
-    }
-
-    /* =========================
-       FORM
-    ========================== */
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 23px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group.full {
-        grid-column: 1 / -1;
-    }
-
-    label {
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 9px;
-        color: #334155;
-    }
-
-    .required {
-        color: #dc2626;
-        margin-left: 2px;
-    }
-
-    input,
-    select,
-    textarea {
-        width: 100%;
-        padding: 14px 16px;
-        border: 1px solid #cbd5e1;
-        border-radius: 9px;
-        font-size: 17px;
-        font-family: inherit;
-        background: #ffffff;
-        color: #1f2937;
-        outline: none;
-        transition: all 0.2s ease;
-    }
-
-    input,
-    select {
-        min-height: 52px;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-        color: #94a3b8;
-    }
-
-    input:hover,
-    select:hover,
-    textarea:hover {
-        border-color: #94a3b8;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-        border-color: #12355b;
-        box-shadow: 0 0 0 3px rgba(18, 53, 91, 0.11);
-    }
-
-    textarea {
-        min-height: 145px;
-        resize: vertical;
-        line-height: 1.6;
-    }
-
-    .hint {
-        margin-top: 7px;
-        font-size: 14px;
-        color: #64748b;
-        line-height: 1.5;
-    }
-
-    .hidden {
-        display: none !important;
-    }
-
-    /* =========================
-       PESERTA RAPAT
-    ========================== */
-
-    .radio-group {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-    }
-
-    .radio-card {
-        position: relative;
-    }
-
-    .radio-card input {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .radio-label {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 62px;
-        padding: 14px 16px;
-        text-align: center;
-        border: 1px solid #cbd5e1;
-        border-radius: 10px;
-        cursor: pointer;
-        background: #ffffff;
-        color: #334155;
-        font-size: 16px;
-        font-weight: 700;
-        transition: all 0.2s ease;
-        margin: 0;
-    }
-
-    .radio-label:hover {
-        border-color: #12355b;
-        background: #f5f8fb;
-    }
-
-    .radio-card input:checked + .radio-label {
-        border: 2px solid #12355b;
-        background: #eef4f8;
-        color: #12355b;
-        box-shadow: 0 3px 10px rgba(18, 53, 91, 0.08);
-    }
-
-    /* =========================
-       HARI
-    ========================== */
-
-    .hari-display {
-        margin-top: 8px;
-        padding: 9px 13px;
-        min-height: 40px;
-        background: #eef4f8;
-        border-left: 4px solid #12355b;
-        border-radius: 6px;
-        color: #12355b;
-        font-size: 15px;
-        font-weight: 700;
-    }
-
-    .hari-display.empty {
-        color: #64748b;
-        font-weight: 400;
-    }
-
-    /* =========================
-       WAKTU
-    ========================== */
-
-    .waktu-container {
-        margin-top: 25px;
-    }
-
-    .waktu-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 17px;
-        margin-top: 13px;
-    }
-
-    .waktu-card {
-        position: relative;
-    }
-
-    .waktu-card input {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .waktu-label {
-        min-height: 132px;
-        padding: 20px;
-        border: 1px solid #cbd5e1;
-        border-radius: 11px;
-        background: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        margin: 0;
-    }
-
-    .waktu-label:hover {
-        border-color: #12355b;
-        background: #f7f9fb;
-        transform: translateY(-1px);
-    }
-
-    .waktu-icon {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #eef4f8;
-        border-radius: 50%;
-        font-size: 23px;
-        flex-shrink: 0;
-    }
-
-    .waktu-content {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .waktu-content strong {
-        color: #12355b;
-        font-size: 17px;
-    }
-
-    .waktu-content span {
-        color: #475569;
-        font-size: 15px;
-    }
-
-    .waktu-card input:checked + .waktu-label {
-        border: 2px solid #12355b;
-        background: #eef4f8;
-        box-shadow: 0 4px 12px rgba(18, 53, 91, 0.08);
-    }
-
-    .waktu-card input:checked + .waktu-label .waktu-icon {
-        background: #dbe7f2;
-    }
-
-    /* =========================
-       WAKTU SUDAH DIGUNAKAN
-    ========================== */
-
-    .waktu-card.disabled .waktu-label {
-        background: #e5e7eb;
-        border-color: #d1d5db;
-        cursor: not-allowed;
-        opacity: 0.65;
-        transform: none;
-    }
-
-    .waktu-card.disabled .waktu-icon {
-        background: #d1d5db;
-    }
-
-    .waktu-card.disabled .waktu-content strong,
-    .waktu-card.disabled .waktu-content span {
-        color: #9ca3af;
-    }
-
-    .waktu-card.disabled::after {
-        content: "Sudah digunakan";
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        background: #d1d5db;
-        color: #6b7280;
-        padding: 5px 8px;
-        border-radius: 5px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    /* =========================
-       BUTTON SUBMIT
-    ========================== */
-
-    .button-area {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        margin-top: 28px;
-        padding-top: 25px;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    .btn-submit {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 52px;
-        padding: 13px 28px;
-        border: none;
-        border-radius: 9px;
-        background: #12355b;
-        color: #ffffff;
-        font-size: 17px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 10px rgba(18, 53, 91, 0.18);
-    }
-
-    .btn-submit:hover {
-        background: #0d2947;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 14px rgba(18, 53, 91, 0.23);
-    }
-
-    .btn-submit:active {
-        transform: translateY(0);
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================== */
-
-    @media (max-width: 900px) {
-
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .radio-group,
-        .waktu-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .card {
-            padding: 30px;
-        }
-
-        .header-inner {
-            width: 94%;
-        }
-    }
-
-    @media (max-width: 600px) {
-
-        body {
-            padding-bottom: 25px;
-        }
-
-        .header {
-            padding: 22px 4% 17px;
-        }
-
-        .header-inner {
-            width: 100%;
-            align-items: flex-start;
-        }
-
-        .header h1 {
-            font-size: 27px;
-        }
-
-        .header p {
-            font-size: 15px;
-        }
-
-        .container {
-            width: 94%;
-            margin-top: 5px;
-        }
-
-        .card {
-            padding: 22px 18px 28px;
-            border-radius: 13px;
-        }
-
-        .aula-info {
-            padding: 17px 18px;
-        }
-
-        .aula-info h2 {
-            font-size: 21px;
-        }
-
-        .section-title {
-            font-size: 20px;
-        }
-
-        label {
-            font-size: 16px;
-        }
-
-        input,
-        select,
-        textarea {
-            font-size: 16px;
-        }
-
-        .btn-back-top {
-            min-height: 40px;
-            padding: 8px 14px;
-            font-size: 14px;
-        }
-
-        .button-area {
-            justify-content: stretch;
-        }
-
-        .btn-submit {
-            width: 100%;
-        }
-
-        .waktu-label {
-            min-height: 110px;
-        }
-    }
-</style>
-
-<body>
-
-    {{-- ==========================================================
-        HEADER
-    =========================================================== --}}
-
-    <header class="header">
-
-        <div class="header-inner">
-
-            <h1>SAPA</h1>
-
-            <p>
-                Sistem Aplikasi untuk Layanan Akomodasi (Aula)
-            </p>
+            <a
+                href="{{ route('aulas') }}"
+                class="back-link"
+            >
+                <x-icon name="arrow-left" size="16" />
+                Kembali ke Daftar Aula
+            </a>
 
         </div>
-
-    </header>
-
-
-    <main class="container">
-
-        <div class="card">
-
-            {{-- ======================================================
-                TOMBOL KEMBALI
-            ======================================================= --}}
-
-            <div class="top-action">
-
-                <a
-                    href="{{ route('aulas') }}"
-                    class="btn-back-top"
-                >
-                    ← Kembali ke Daftar Aula
-                </a>
-
-            </div>
 
 
             {{-- ======================================================
@@ -981,8 +359,7 @@
 
 
                     <div
-                        class="form-grid"
-                        style="margin-top: 22px;"
+                        class="form-grid peserta-grid"
                     >
 
 
@@ -1180,7 +557,7 @@
                                 >
 
                                     <span class="waktu-icon">
-                                        🌅
+                                        <x-icon name="sunrise" />
                                     </span>
 
 
@@ -1224,7 +601,7 @@
                                 >
 
                                     <span class="waktu-icon">
-                                        ☀️
+                                        <x-icon name="sun" />
                                     </span>
 
 
@@ -1268,7 +645,7 @@
                                 >
 
                                     <span class="waktu-icon">
-                                        🌙
+                                        <x-icon name="moon" />
                                     </span>
 
 
@@ -1312,7 +689,7 @@
                                 >
 
                                     <span class="waktu-icon">
-                                        🌤️
+                                        <x-icon name="sun" />
                                     </span>
 
 
@@ -1356,7 +733,7 @@
                                 >
 
                                     <span class="waktu-icon">
-                                        🌆
+                                        <x-icon name="sunset" />
                                     </span>
 
 
@@ -1400,7 +777,7 @@
                                 >
 
                                     <span class="waktu-icon">
-                                        🌗
+                                        <x-icon name="day-night" />
                                     </span>
 
 
@@ -1448,9 +825,6 @@
             </form>
 
         </div>
-
-    </main>
-
 
     <script>
 
@@ -2100,6 +1474,4 @@
 
     </script>
 
-</body>
-
-</html>
+@endsection

@@ -31,7 +31,7 @@ class AdminRiwayatTest extends FeatureTestCase
         $this->daftar();
 
         $this->actingAs($this->user('admin'))
-            ->get(route('admin.history', ['status' => '']))
+            ->get(route('admin.pendaftaran.index', ['status' => '']))
             ->assertOk()
             ->assertSee('class="filter-btn active"', false);
     }
@@ -41,7 +41,7 @@ class AdminRiwayatTest extends FeatureTestCase
         $this->daftar();
 
         $this->actingAs($this->user('admin'))
-            ->get(route('admin.history', ['status' => 'ngawur']))
+            ->get(route('admin.pendaftaran.index', ['status' => 'ngawur']))
             ->assertOk()
             ->assertSee('class="filter-btn active"', false);
     }
@@ -54,7 +54,7 @@ class AdminRiwayatTest extends FeatureTestCase
         $disetujui->update(['status' => 'disetujui']);
 
         $this->actingAs($this->user('admin'))
-            ->get(route('admin.history', ['status' => 'disetujui']))
+            ->get(route('admin.pendaftaran.index', ['status' => 'disetujui']))
             ->assertOk()
             ->assertSee('Budi')
             ->assertSee('Disetujui');

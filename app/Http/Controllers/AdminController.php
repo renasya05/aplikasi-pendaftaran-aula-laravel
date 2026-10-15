@@ -522,7 +522,7 @@ class AdminController extends Controller
 
 
         return redirect()
-            ->route('admin.aulas')
+            ->route('admin.aulas.index')
             ->with(
                 'success',
                 'Data aula berhasil ditambahkan.'
@@ -600,7 +600,7 @@ class AdminController extends Controller
 
 
         return redirect()
-            ->route('admin.aulas')
+            ->route('admin.aulas.index')
             ->with(
                 'success',
                 'Data aula berhasil diperbarui.'
@@ -620,7 +620,7 @@ class AdminController extends Controller
 
 
         return redirect()
-            ->route('admin.aulas')
+            ->route('admin.aulas.index')
             ->with(
                 'success',
                 'Data aula berhasil dihapus.'

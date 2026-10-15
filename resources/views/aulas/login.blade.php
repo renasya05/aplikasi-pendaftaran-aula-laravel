@@ -7,6 +7,8 @@
 
     <title>Login | SAPA</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo-sapa.svg') }}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -72,6 +74,9 @@
         }
 
         .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 25px;
             font-weight: 800;
             letter-spacing: 3px;
@@ -358,6 +363,12 @@
         <div class="welcome-section">
 
             <div class="brand">
+                <img
+                    src="{{ asset('images/logo-sapa.svg') }}"
+                    alt=""
+                    width="48"
+                    height="48"
+                >
                 SAPA
             </div>
 

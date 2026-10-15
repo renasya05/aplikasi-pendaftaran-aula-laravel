@@ -6,6 +6,8 @@
 
     <title>Pendaftaran Aula | SAPA</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo-sapa.svg') }}">
+
     <style>
         * {
             margin: 0;
@@ -30,6 +32,9 @@
         }
 
         .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 22px;
             font-weight: bold;
         }
@@ -336,8 +341,16 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="brand">
-            SAPA
-            <span>Sistem Aplikasi Pemakai Aula</span>
+            <img
+                src="{{ asset('images/logo-sapa.svg') }}"
+                alt=""
+                width="40"
+                height="40"
+            >
+            <div>
+                SAPA
+                <span>Sistem Aplikasi Pemakai Aula</span>
+            </div>
         </div>
 
         <a href="{{ route('aulas') }}" class="back-link">

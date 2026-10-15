@@ -14,10 +14,6 @@
 
         <div class="header-left">
 
-            <span class="page-label">
-                RIWAYAT
-            </span>
-
             <h1>
                 Detail Pendaftaran
             </h1>
@@ -31,12 +27,14 @@
         <div class="header-actions">
 
             <a href="{{ route('dashboard') }}" class="back-btn">
-                ← Dashboard
+                <x-icon name="arrow-left" size="16" />
+                Dashboard
             </a>
 
             <a href="{{ route('pendaftaran.history') }}"
                class="back-btn secondary">
-                ← Riwayat
+                <x-icon name="arrow-left" size="16" />
+                Riwayat
             </a>
 
         </div>
@@ -61,11 +59,11 @@
         ">
 
             @if($pendaftaran->status === 'disetujui')
-                ✓
+                <x-icon name="check" />
             @elseif($pendaftaran->status === 'ditolak' || $pendaftaran->status === 'dibatalkan')
-                ×
+                <x-icon name="x" />
             @else
-                !
+                <x-icon name="clock" />
             @endif
 
         </div>
@@ -132,7 +130,7 @@
             <div class="admin-note">
 
                 <div class="note-icon">
-                    i
+                    <x-icon name="info" size="18" />
                 </div>
 
                 <div>
@@ -197,7 +195,7 @@
                 <div class="section-title">
 
                     <div class="section-icon">
-                        ▦
+                        <x-icon name="building" />
                     </div>
 
                     <div>
@@ -256,7 +254,7 @@
                 <div class="section-title">
 
                     <div class="section-icon">
-                        ◉
+                        <x-icon name="user" />
                     </div>
 
                     <div>
@@ -328,7 +326,7 @@
                 <div class="section-title">
 
                     <div class="section-icon">
-                        ▤
+                        <x-icon name="briefcase" />
                     </div>
 
                     <div>
@@ -400,7 +398,7 @@
                 <div class="section-title">
 
                     <div class="section-icon">
-                        ◷
+                        <x-icon name="clock" />
                     </div>
 
                     <div>
@@ -493,7 +491,7 @@
                 <div class="section-title">
 
                     <div class="section-icon">
-                        ♙
+                        <x-icon name="users" />
                     </div>
 
                     <div>
@@ -590,7 +588,7 @@
                 <div class="section-title">
 
                     <div class="section-icon">
-                        ◫
+                        <x-icon name="info" />
                     </div>
 
                     <div>
@@ -651,7 +649,7 @@
             <div class="purpose-header">
 
                 <div class="purpose-icon">
-                    ▤
+                    <x-icon name="checklist" />
                 </div>
 
                 <div>
@@ -686,7 +684,8 @@
                 href="{{ route('dashboard') }}"
                 class="dashboard-btn"
             >
-                ← Dashboard
+                <x-icon name="arrow-left" size="16" />
+                Dashboard
             </a>
 
 
@@ -717,625 +716,5 @@
 </div>
 
 
-<style>
-
-/* =====================================================
-   DETAIL PAGE
-===================================================== */
-
-.detail-page {
-    max-width: 1150px;
-    margin: 0 auto;
-    padding: 34px 6px 50px;
-}
-
-
-/* =====================================================
-   HEADER
-===================================================== */
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 25px;
-    margin-bottom: 24px;
-}
-
-.header-left {
-    flex: 1;
-}
-
-.page-label {
-    display: block;
-    color: #2563eb;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-}
-
-.page-header h1 {
-    margin: 0;
-    color: #12355b;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -.4px;
-}
-
-.page-header p {
-    margin: 8px 0 0;
-    color: #64748b;
-    font-size: 13px;
-}
-
-
-/* =====================================================
-   HEADER BUTTON
-===================================================== */
-
-.header-actions {
-    display: flex;
-    gap: 9px;
-    flex-wrap: wrap;
-}
-
-.back-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 40px;
-    padding: 0 17px;
-    background: #12355b;
-    color: white;
-    border: 1px solid #12355b;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 700;
-    transition: .2s ease;
-}
-
-.back-btn:hover {
-    background: #0e2947;
-    border-color: #0e2947;
-    color: white;
-    transform: translateY(-1px);
-}
-
-.back-btn.secondary {
-    background: white;
-    color: #12355b;
-    border-color: #d5dee8;
-}
-
-.back-btn.secondary:hover {
-    background: #f8fafc;
-    color: #12355b;
-}
-
-
-/* =====================================================
-   STATUS CARD
-===================================================== */
-
-.status-card {
-    display: flex;
-    align-items: center;
-    gap: 17px;
-    padding: 20px 22px;
-    margin-bottom: 20px;
-    background: white;
-    border: 1px solid #dfe6ee;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(15, 23, 42, .04);
-}
-
-.status-icon {
-    width: 46px;
-    height: 46px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: 21px;
-    font-weight: 800;
-}
-
-.status-icon-success {
-    background: #dcfce7;
-    color: #15803d;
-}
-
-.status-icon-danger {
-    background: #fee2e2;
-    color: #dc2626;
-}
-
-.status-icon-warning {
-    background: #fef3c7;
-    color: #b45309;
-}
-
-.status-content {
-    min-width: 0;
-}
-
-.status-label {
-    display: block;
-    color: #64748b;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.4px;
-}
-
-.status-content strong {
-    display: block;
-    margin-top: 5px;
-    font-size: 17px;
-}
-
-.status-content p {
-    margin: 5px 0 0;
-    color: #64748b;
-    font-size: 12px;
-    line-height: 1.6;
-}
-
-.status-success {
-    color: #15803d;
-}
-
-.status-warning {
-    color: #b45309;
-}
-
-.status-danger {
-    color: #dc2626;
-}
-
-
-/* =====================================================
-   DETAIL CARD
-===================================================== */
-
-.detail-card {
-    background: white;
-    border: 1px solid #dfe6ee;
-    border-radius: 13px;
-    overflow: hidden;
-    box-shadow: 0 7px 25px rgba(15, 23, 42, .05);
-}
-
-
-/* =====================================================
-   CARD HEADER
-===================================================== */
-
-.card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 23px 27px;
-    border-bottom: 1px solid #e8edf3;
-}
-
-.card-header h2 {
-    margin: 0;
-    color: #12355b;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.card-header p {
-    margin: 6px 0 0;
-    color: #64748b;
-    font-size: 13px;
-}
-
-.number-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 48px;
-    padding: 8px 12px;
-    background: #eff6ff;
-    color: #12355b;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 800;
-}
-
-
-/* =====================================================
-   DETAIL GRID
-===================================================== */
-
-.detail-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-}
-
-
-/* =====================================================
-   DETAIL SECTION
-===================================================== */
-
-.detail-section {
-    padding: 29px 32px;
-    border-bottom: 1px solid #edf1f5;
-    min-height: 210px;
-}
-
-.detail-section:nth-child(odd) {
-    border-right: 1px solid #edf1f5;
-}
-
-
-/* =====================================================
-   SECTION TITLE
-===================================================== */
-
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 22px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #eff6ff;
-}
-
-.section-icon {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eff6ff;
-    color: #12355b;
-    border-radius: 9px;
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.section-title h3 {
-    margin: 0;
-    color: #12355b;
-    font-size: 17px;
-    font-weight: 700;
-}
-
-.section-title span {
-    display: block;
-    margin-top: 3px;
-    color: #94a3b8;
-    font-size: 12px;
-}
-
-
-/* =====================================================
-   INFO ITEM
-===================================================== */
-
-.info-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 35px;
-    padding: 15px 0;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.info-item span {
-    flex: 0 0 155px;
-    color: #64748b;
-    font-size: 14px;
-    line-height: 1.7;
-    font-weight: 600;
-}
-
-.info-item:last-child {
-    border-bottom: none;
-}
-
-.info-item strong {
-    flex: 1;
-    color: #12355b;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: right;
-    line-height: 1.7;
-    overflow-wrap: anywhere;
-}
-
-
-/* =====================================================
-   PURPOSE
-===================================================== */
-
-.purpose-box {
-    margin: 24px 27px;
-    padding: 20px;
-    background: #f8fafc;
-    border: 1px solid #e1e8ef;
-    border-radius: 10px;
-}
-
-.purpose-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
-}
-
-.purpose-icon {
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eff6ff;
-    color: #12355b;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.purpose-header h3 {
-    margin: 0;
-    color: #12355b;
-    font-size: 16px;
-}
-
-.purpose-header span {
-    display: block;
-    margin-top: 3px;
-    color: #94a3b8;
-    font-size: 12px;
-}
-
-.purpose-content {
-    padding: 15px 16px;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    color: #475569;
-    font-size: 14px;
-    line-height: 1.8;
-    white-space: pre-line;
-}
-
-
-/* =====================================================
-   ADMIN NOTE
-===================================================== */
-
-.admin-note {
-    display: flex;
-    gap: 13px;
-    margin: 0 27px 22px;
-    padding: 17px;
-    background: #eff6ff;
-    border: 1px solid #dbeafe;
-    border-radius: 10px;
-}
-
-.note-icon {
-    width: 31px;
-    height: 31px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: #dbeafe;
-    color: #2563eb;
-    font-size: 14px;
-    font-weight: 800;
-}
-
-.admin-note h3 {
-    margin: 0 0 6px;
-    color: #12355b;
-    font-size: 13px;
-}
-
-.admin-note p {
-    margin: 0;
-    color: #475569;
-    font-size: 12px;
-    line-height: 1.7;
-}
-
-
-/* =====================================================
-   FOOTER BUTTON
-===================================================== */
-
-.detail-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    padding: 18px 27px;
-    background: #f8fafc;
-    border-top: 1px solid #e5eaf0;
-}
-
-.dashboard-btn,
-.history-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 39px;
-    padding: 0 16px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: .2s ease;
-}
-
-.dashboard-btn {
-    background: #12355b;
-    border: 1px solid #12355b;
-    color: white;
-}
-
-.dashboard-btn:hover {
-    background: #0e2947;
-    border-color: #0e2947;
-    color: white;
-    transform: translateY(-1px);
-}
-
-.cancel-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 39px;
-    padding: 0 16px;
-    border-radius: 8px;
-    border: 1px solid #dc2626;
-    background: #dc2626;
-    color: white;
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s ease;
-}
-
-.cancel-btn:hover {
-    background: #b91c1c;
-    border-color: #b91c1c;
-    transform: translateY(-1px);
-}
-
-.history-btn {
-    background: white;
-    border: 1px solid #cbd5e1;
-    color: #12355b;
-}
-
-.history-btn:hover {
-    background: #12355b;
-    border-color: #12355b;
-    color: white;
-}
-
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media (max-width: 850px) {
-
-    .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .header-actions {
-        width: 100%;
-    }
-
-    .detail-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .detail-section:nth-child(odd) {
-        border-right: none;
-    }
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 600px) {
-
-    .detail-page {
-        padding: 24px 10px 40px;
-    }
-
-    .page-header h1 {
-        font-size: 24px;
-    }
-
-    .header-actions {
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .back-btn {
-        width: 100%;
-    }
-
-    .status-card {
-        align-items: flex-start;
-    }
-
-    .card-header {
-        gap: 10px;
-        padding: 20px;
-    }
-
-    .card-header h2 {
-        font-size: 18px;
-    }
-
-    .detail-section {
-        padding: 23px 20px;
-        min-height: auto;
-    }
-
-    .section-title {
-        margin-bottom: 18px;
-    }
-
-    .info-item {
-        flex-direction: column;
-        gap: 6px;
-        padding: 13px 0;
-    }
-
-    .info-item span {
-        flex: none;
-        font-size: 13px;
-    }
-
-    .info-item strong {
-        text-align: left;
-        font-size: 15px;
-    }
-
-    .purpose-box {
-        margin: 18px;
-    }
-
-    .admin-note {
-        margin: 0 18px 18px;
-    }
-
-    .detail-footer {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .dashboard-btn,
-    .history-btn {
-        width: 100%;
-    }
-}
-
-</style>
 
 @endsection

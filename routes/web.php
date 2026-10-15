@@ -15,11 +15,7 @@ use App\Http\Controllers\PendaftaranController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-
-    return redirect()->route('login');
-
-});
+Route::get('/', fn () => redirect()->route('login'));
 
 
 /*
@@ -28,35 +24,15 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get(
-    '/login',
-    [AuthController::class, 'showLogin']
-)->name('login');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
-Route::post(
-    '/login',
-    [AuthController::class, 'login']
-)->name('login.process');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 
+Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 
-Route::get(
-    '/register',
-    [AuthController::class, 'showRegister']
-)->name('register');
-
-
-Route::post(
-    '/register',
-    [AuthController::class, 'register']
-)->name('register.process');
-
-
-Route::post(
-    '/logout',
-    [AuthController::class, 'logout']
-)->name('logout');
-
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 /*
@@ -67,128 +43,50 @@ Route::post(
 
 Route::middleware('auth')->group(function () {
 
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard User
-    |--------------------------------------------------------------------------
-    */
+    Route::get('/aulas', [DashboardController::class, 'aulas'])->name('aulas');
 
-    Route::get(
-        '/dashboard',
-        [DashboardController::class, 'index']
-    )->name('dashboard');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Daftar Aula
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/aulas',
-        [DashboardController::class, 'aulas']
-    )->name('aulas');
-
+    Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi');
 
 
     /*
     |--------------------------------------------------------------------------
     | Pendaftaran Aula
     |--------------------------------------------------------------------------
-    */
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cek Ketersediaan Waktu
-    |--------------------------------------------------------------------------
     |
-    | Route ini harus diletakkan sebelum
-    | /pendaftaran/{aula}
+    | Cek ketersediaan harus berada sebelum /pendaftaran/{aula}.
     |
     */
 
-    Route::get(
-        '/pendaftaran/availability/check',
-        [PendaftaranController::class, 'availability']
-    )->name('pendaftaran.availability');
+    Route::prefix('pendaftaran')->name('pendaftaran.')->group(function () {
+
+        Route::get('availability/check', [PendaftaranController::class, 'availability'])->name('availability');
+
+        Route::get('{aula}', [PendaftaranController::class, 'create'])->name('create');
+
+        Route::post('/', [PendaftaranController::class, 'store'])->name('store');
+
+    });
 
 
     /*
     |--------------------------------------------------------------------------
-    | Form Pendaftaran
+    | Riwayat Pendaftaran
     |--------------------------------------------------------------------------
     */
 
-    Route::get(
-        '/pendaftaran/{aula}',
-        [PendaftaranController::class, 'create']
-    )->name('pendaftaran.create');
+    Route::prefix('riwayat-pendaftaran')->name('pendaftaran.')->group(function () {
 
+        Route::get('/', [PendaftaranController::class, 'history'])->name('history');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Simpan Pendaftaran
-    |--------------------------------------------------------------------------
-    */
+        Route::get('{pendaftaran}', [PendaftaranController::class, 'show'])->name('show');
 
-    Route::post(
-        '/pendaftaran',
-        [PendaftaranController::class, 'store']
-    )->name('pendaftaran.store');
+        Route::put('{pendaftaran}/cancel', [PendaftaranController::class, 'cancel'])->name('cancel');
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Riwayat Pendaftaran User
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/riwayat-pendaftaran',
-        [PendaftaranController::class, 'history']
-    )->name('pendaftaran.history');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Detail Pendaftaran User
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/riwayat-pendaftaran/{pendaftaran}',
-        [PendaftaranController::class, 'show']
-    )->name('pendaftaran.show');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Batalkan Pendaftaran User
-    |--------------------------------------------------------------------------
-    */
-
-    Route::put(
-        '/riwayat-pendaftaran/{pendaftaran}/cancel',
-        [PendaftaranController::class, 'cancel']
-    )->name('pendaftaran.cancel');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Informasi
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/informasi',
-        [InformasiController::class, 'index']
-    )->name('informasi');
+    });
 
 });
-
 
 
 /*
@@ -197,20 +95,11 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
 
+    Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard Admin
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/admin/dashboard',
-        [AdminController::class, 'dashboard']
-    )->name('admin.dashboard');
-
+    Route::get('laporan', [AdminController::class, 'laporan'])->name('laporan');
 
 
     /*
@@ -219,89 +108,41 @@ Route::middleware(['auth', 'admin'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get(
-        '/admin/aulas',
-        [AdminController::class, 'aulas']
-    )->name('admin.aulas');
+    Route::prefix('aulas')->name('aulas.')->group(function () {
 
+        Route::get('/', [AdminController::class, 'aulas'])->name('index');
 
-    Route::get(
-        '/admin/aulas/create',
-        [AdminController::class, 'createAula']
-    )->name('admin.aulas.create');
+        Route::get('create', [AdminController::class, 'createAula'])->name('create');
 
+        Route::post('/', [AdminController::class, 'storeAula'])->name('store');
 
-    Route::post(
-        '/admin/aulas',
-        [AdminController::class, 'storeAula']
-    )->name('admin.aulas.store');
+        Route::get('{aula}', [AdminController::class, 'showAula'])->name('show');
 
+        Route::get('{aula}/edit', [AdminController::class, 'editAula'])->name('edit');
 
-    Route::get(
-        '/admin/aulas/{aula}',
-        [AdminController::class, 'showAula']
-    )->name('admin.aulas.show');
+        Route::put('{aula}', [AdminController::class, 'updateAula'])->name('update');
 
+        Route::delete('{aula}', [AdminController::class, 'destroyAula'])->name('destroy');
 
-    Route::get(
-        '/admin/aulas/{aula}/edit',
-        [AdminController::class, 'editAula']
-    )->name('admin.aulas.edit');
-
-
-    Route::put(
-        '/admin/aulas/{aula}',
-        [AdminController::class, 'updateAula']
-    )->name('admin.aulas.update');
-
-
-    Route::delete(
-        '/admin/aulas/{aula}',
-        [AdminController::class, 'destroyAula']
-    )->name('admin.aulas.destroy');
-
+    });
 
 
     /*
     |--------------------------------------------------------------------------
-    | Pendaftaran Admin
+    | Pendaftaran
     |--------------------------------------------------------------------------
     */
 
-    Route::get(
-        '/admin/history',
-        [AdminController::class, 'history']
-    )->name('admin.history');
+    Route::prefix('pendaftaran')->name('pendaftaran.')->group(function () {
 
+        Route::get('/', [AdminController::class, 'history'])->name('index');
 
-    Route::get(
-        '/admin/pendaftaran/{pendaftaran}',
-        [AdminController::class, 'show']
-    )->name('admin.pendaftaran.show');
+        Route::get('{pendaftaran}', [AdminController::class, 'show'])->name('show');
 
+        Route::put('{pendaftaran}/approve', [AdminController::class, 'approve'])->name('approve');
 
-    Route::put(
-        '/admin/pendaftaran/{pendaftaran}/approve',
-        [AdminController::class, 'approve']
-    )->name('admin.pendaftaran.approve');
+        Route::put('{pendaftaran}/reject', [AdminController::class, 'reject'])->name('reject');
 
-
-    Route::put(
-        '/admin/pendaftaran/{pendaftaran}/reject',
-        [AdminController::class, 'reject']
-    )->name('admin.pendaftaran.reject');
-
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Laporan
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/admin/laporan',
-        [AdminController::class, 'laporan']
-    )->name('admin.laporan');
+    });
 
 });

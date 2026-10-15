@@ -95,7 +95,7 @@ class PendaftaranAvailabilityTest extends FeatureTestCase
     public function test_halaman_daftar_terlihat_oleh_admin_bukan_user_biasa(): void
     {
         $this->actingAs($this->user())
-            ->get(route('admin.history'))
+            ->get(route('admin.pendaftaran.index'))
             ->assertRedirect(route('dashboard'));
     }
 }
