@@ -6,6 +6,7 @@ use App\Models\Aula;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PendaftaranController extends Controller
 {
@@ -326,44 +327,117 @@ class PendaftaranController extends Controller
          *
          * Pendaftaran dengan status menunggu
          * atau disetujui dianggap menggunakan jadwal.
+         *
+         * Cek dan simpan dijalankan dalam satu transaksi sambil
+         * mengunci baris aula, supaya dua pengajuan bersamaan untuk
+         * slot yang sama tidak bisa dua-duanya lolos cek.
          */
-        $bentrok = Pendaftaran::query()
-            ->where(
-                'aula_id',
-                $aula->id
-            )
-            ->whereIn(
-                'status',
-                [
+        $bentrok = DB::transaction(function () use ($aula, $validated, $kriteriaBentrok, $instansi, $unitOrganisasi, $bagianSeksi, $pesertaAsal) {
+
+            Aula::whereKey($aula->id)
+                ->lockForUpdate()
+                ->first();
+
+            $bentrok = Pendaftaran::query()
+                ->where(
+                    'aula_id',
+                    $aula->id
+                )
+                ->whereIn(
+                    'status',
+                    [
+                        'menunggu',
+                        'disetujui',
+                    ]
+                )
+                ->whereNotNull(
+                    'tanggal_mulai'
+                )
+                ->whereNotNull(
+                    'tanggal_selesai'
+                )
+                // whereDate, bukan where: kolom date menyimpan
+                // "2026-10-20 00:00:00", sehingga perbandingan
+                // string dengan "2026-10-20" selalu salah dan
+                // bentrok tidak pernah terdeteksi.
+                ->whereDate(
+                    'tanggal_mulai',
+                    '<=',
+                    $validated['tanggal_selesai']
+                )
+                ->whereDate(
+                    'tanggal_selesai',
+                    '>=',
+                    $validated['tanggal_mulai']
+                )
+                ->whereIn(
+                    'kriteria_waktu',
+                    $kriteriaBentrok
+                )
+                ->exists();
+
+            if ($bentrok) {
+                return true;
+            }
+
+            /**
+             * Simpan pendaftaran.
+             *
+             * Masih di dalam transaksi yang sama supaya baris
+             * baru masuk sebelum lock aula dilepas.
+             */
+            Pendaftaran::create([
+                'user_id' =>
+                    Auth::id(),
+
+                'aula_id' =>
+                    $aula->id,
+
+                'nama_pemohon' =>
+                    $validated['nama_pemohon'],
+
+                'nip' =>
+                    '-',
+
+                'jabatan' =>
+                    $validated['jabatan'],
+
+                'instansi' =>
+                    $instansi,
+
+                'unit_organisasi' =>
+                    $unitOrganisasi,
+
+                'bagian_seksi' =>
+                    $bagianSeksi,
+
+                'peserta_asal' =>
+                    $pesertaAsal,
+
+                'tanggal_mulai' =>
+                    $validated['tanggal_mulai'],
+
+                'tanggal_selesai' =>
+                    $validated['tanggal_selesai'],
+
+                'kriteria_waktu' =>
+                    $validated['kriteria_waktu'],
+
+                'jumlah_peserta' =>
+                    $validated['jumlah_peserta'],
+
+                'keperluan' =>
+                    $validated['keperluan'],
+
+                'status' =>
                     'menunggu',
-                    'disetujui',
-                ]
-            )
-            ->whereNotNull(
-                'tanggal_mulai'
-            )
-            ->whereNotNull(
-                'tanggal_selesai'
-            )
-            // whereDate, bukan where: kolom date menyimpan
-            // "2026-10-20 00:00:00", sehingga perbandingan
-            // string dengan "2026-10-20" selalu salah dan
-            // bentrok tidak pernah terdeteksi.
-            ->whereDate(
-                'tanggal_mulai',
-                '<=',
-                $validated['tanggal_selesai']
-            )
-            ->whereDate(
-                'tanggal_selesai',
-                '>=',
-                $validated['tanggal_mulai']
-            )
-            ->whereIn(
-                'kriteria_waktu',
-                $kriteriaBentrok
-            )
-            ->exists();
+
+                'catatan_admin' =>
+                    null,
+            ]);
+
+            return false;
+        });
 
         /**
          * Jika jadwal bentrok.
@@ -401,59 +475,6 @@ class PendaftaranController extends Controller
                         ' sudah digunakan pada rentang tanggal tersebut. Silakan pilih waktu lain.',
                 ]);
         }
-
-        /**
-         * Simpan pendaftaran.
-         */
-        Pendaftaran::create([
-            'user_id' =>
-                Auth::id(),
-
-            'aula_id' =>
-                $aula->id,
-
-            'nama_pemohon' =>
-                $validated['nama_pemohon'],
-
-            'nip' =>
-                '-',
-
-            'jabatan' =>
-                $validated['jabatan'],
-
-            'instansi' =>
-                $instansi,
-
-            'unit_organisasi' =>
-                $unitOrganisasi,
-
-            'bagian_seksi' =>
-                $bagianSeksi,
-
-            'peserta_asal' =>
-                $pesertaAsal,
-
-            'tanggal_mulai' =>
-                $validated['tanggal_mulai'],
-
-            'tanggal_selesai' =>
-                $validated['tanggal_selesai'],
-
-            'kriteria_waktu' =>
-                $validated['kriteria_waktu'],
-
-            'jumlah_peserta' =>
-                $validated['jumlah_peserta'],
-
-            'keperluan' =>
-                $validated['keperluan'],
-
-            'status' =>
-                'menunggu',
-
-            'catatan_admin' =>
-                null,
-        ]);
 
         /**
          * Redirect ke riwayat.
@@ -639,9 +660,25 @@ class PendaftaranController extends Controller
         }
 
 
-        $pendaftaran->update([
-            'status' => 'dibatalkan',
-        ]);
+        /*
+         * Update bersyarat: kalau admin sudah menyetujui antara
+         * pengecekan di atas dan update ini, tidak ada baris yang
+         * berubah dan pembatalan ditolak.
+         */
+        $dibatalkan = Pendaftaran::whereKey($pendaftaran->id)
+            ->where('status', 'menunggu')
+            ->update([
+                'status' => 'dibatalkan',
+            ]);
+
+        if ($dibatalkan === 0) {
+            return redirect()
+                ->route('pendaftaran.show', $pendaftaran)
+                ->with(
+                    'error',
+                    'Pengajuan hanya dapat dibatalkan selama status Menunggu.'
+                );
+        }
 
 
         return redirect()

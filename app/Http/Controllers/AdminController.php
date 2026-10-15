@@ -211,6 +211,19 @@ class AdminController extends Controller
             $pendaftaran->kriteria_waktu
         ] ?? [];
 
+        /*
+        | kriteria_waktu kosong/tak dikenal membuat whereIn di bawah
+        | menerima array kosong (menjadi "0 = 1"), sehingga cek
+        | bentrok selalu lolos dan aula yang sudah terpakai ikut
+        | disetujui. Tolak saja pengajuan yang tidak punya slot.
+        */
+        if (empty($slotDiminta)) {
+            return back()->with(
+                'error',
+                'Pengajuan tidak dapat diproses karena kriteria waktunya tidak dikenal.'
+            );
+        }
+
         $kriteriaBentrok = [];
 
         foreach ($slotMap as $kriteria => $slots) {
@@ -310,6 +323,24 @@ class AdminController extends Controller
         Request $request,
         Pendaftaran $pendaftaran
     ) {
+        /*
+        |--------------------------------------------------------------------------
+        | Hanya pengajuan menunggu yang dapat diproses
+        |--------------------------------------------------------------------------
+        |
+        | Tanpa guard ini, pengajuan yang sudah disetujui atau
+        | dibatalkan user bisa ditolak, sehingga aula terbuang
+        | padahal pemohon sudah diberi tahu bookings-nya.
+        |
+        */
+        if ($pendaftaran->status !== 'menunggu') {
+            return back()->with(
+                'error',
+                'Pengajuan ini sudah diproses sebelumnya.'
+            );
+        }
+
+
         $validated = $request->validate(
             [
                 'catatan_admin' => [
